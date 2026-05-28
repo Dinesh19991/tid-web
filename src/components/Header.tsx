@@ -3,10 +3,10 @@ import logoMark from '../assets/assets/Logo_mark.png';
 import tidLogo from '../assets/assets/tid_logo.png';
 
 const NAV = [
-  { label: 'How it works', href: '#how' },
-  { label: 'Outcomes', href: '#outcomes' },
-  { label: 'Use cases', href: '#usecases' },
-  { label: 'Pricing', href: '#pricing' },
+  { label: 'How it works', href: '/#how' },
+  { label: 'Outcomes', href: '/#outcomes' },
+  { label: 'Use cases', href: '/#usecases' },
+  { label: 'Pricing', href: '/#pricing' },
 ];
 
 export default function Header() {
@@ -42,7 +42,7 @@ export default function Header() {
           ))}
         </nav>
 
-        <a href="#" className="flex items-center gap-2 lg:flex-1 lg:justify-center">
+        <a href="/" className="flex items-center gap-2 lg:flex-1 lg:justify-center">
           <span
             className="block w-6 h-6"
             style={{
@@ -73,7 +73,7 @@ export default function Header() {
             Sign in
           </a>
           <a
-            href="#get-tid"
+            href="/#get-tid"
             className="text-[13px] font-medium rounded-full px-4 py-2 transition bg-white text-[#0a0a0d] hover:bg-white/90"
           >
             Get tid

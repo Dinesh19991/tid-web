@@ -5,15 +5,31 @@ import tidLogo from '../assets/assets/tid_logo.png';
 const COLUMNS = [
   {
     title: 'Product',
-    links: ['Features', 'Outcomes', 'Use cases', 'How it works', 'Pricing'],
+    links: [
+      { label: 'Features', href: '/#features' },
+      { label: 'Outcomes', href: '/#outcomes' },
+      { label: 'Use cases', href: '/#usecases' },
+      { label: 'How it works', href: '/#how' },
+      { label: 'Pricing', href: '/#pricing' },
+    ],
   },
   {
     title: 'Resources',
-    links: ['Documentation', 'Changelog', 'Templates', 'Status'],
+    links: [
+      { label: 'Documentation', href: '#' },
+      { label: 'Changelog', href: '#' },
+      { label: 'Templates', href: '#' },
+      { label: 'Status', href: '#' },
+    ],
   },
   {
     title: 'Company',
-    links: ['About', 'Privacy Policy', 'Terms', 'Trust Center'],
+    links: [
+      { label: 'About', href: '/about' },
+      { label: 'Privacy Policy', href: '/privacy' },
+      { label: 'Terms', href: '/terms' },
+      { label: 'Trust Center', href: '/trust' },
+    ],
   },
 ];
 
@@ -74,12 +90,12 @@ export default function Footer() {
               </h4>
               <ul className="space-y-3">
                 {col.links.map((l) => (
-                  <li key={l}>
+                  <li key={l.label}>
                     <a
-                      href="#"
+                      href={l.href}
                       className="text-white/50 hover:text-white text-[13px] transition-colors"
                     >
-                      {l}
+                      {l.label}
                     </a>
                   </li>
                 ))}

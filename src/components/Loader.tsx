@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from '../lib/gsap';
 import logoMark from '../assets/assets/Logo_mark.png';
+import tidLogo from '../assets/assets/tid_logo.png';
 
 const WORDS = [
   'Capturing thoughts',
@@ -139,9 +140,12 @@ export default function Loader() {
               backgroundColor: '#ffffff',
             }}
           />
-          <span className="text-white text-[30px] font-semibold tracking-tight">
-            tid
-          </span>
+          <img
+            src={tidLogo}
+            alt="tid"
+            className="h-7 w-auto"
+            draggable={false}
+          />
         </div>
         <span className="loader-status text-[11.5px] tracking-[0.26em] uppercase text-white/50">
           Capturing thoughts

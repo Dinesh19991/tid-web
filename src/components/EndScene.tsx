@@ -50,14 +50,8 @@ export default function EndScene() {
           Join thousands of thinkers capturing, organizing, and recalling
           everything with tid.
         </p>
-        <div className="mt-9 flex flex-col items-center gap-5">
+        <div className="mt-9 flex justify-center">
           <StoreBadges center />
-          <a
-            href="#"
-            className="text-[13px] font-medium text-white/70 hover:text-white transition-colors"
-          >
-            or talk to us →
-          </a>
         </div>
       </div>
     </section>
