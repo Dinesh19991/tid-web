@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import logoMark from '../assets/assets/Logo_mark.png';
+import tidLogo from '../assets/assets/tid_logo.png';
 
 const COLUMNS = [
   {
@@ -39,9 +40,12 @@ export default function Footer() {
                   backgroundColor: '#ffffff',
                 }}
               />
-              <span className="text-[16px] font-semibold tracking-tight text-white">
-                tid
-              </span>
+              <img
+                src={tidLogo}
+                alt="tid"
+                className="h-[18px] w-auto"
+                draggable={false}
+              />
             </div>
             <p className="text-white/50 text-[13px] leading-relaxed max-w-[15rem] mb-5">
               Your AI second brain — capture, organize, and recall every thought.
@@ -87,19 +91,14 @@ export default function Footer() {
 
       {/* giant wordmark */}
       <div className="overflow-hidden flex justify-center select-none pointer-events-none px-6">
-        <span
+        <img
+          src={tidLogo}
+          alt=""
           aria-hidden
-          className="block leading-none whitespace-nowrap"
-          style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: 'clamp(88px, 18vw, 240px)',
-            fontWeight: 700,
-            letterSpacing: '-0.05em',
-            color: 'rgba(255,255,255,0.055)',
-          }}
-        >
-          tid
-        </span>
+          draggable={false}
+          className="block w-auto opacity-[0.055]"
+          style={{ height: 'clamp(70px, 15vw, 200px)' }}
+        />
       </div>
 
       <div className="border-t border-white/[0.07]">

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import logoMark from '../assets/assets/Logo_mark.png';
+import tidLogo from '../assets/assets/tid_logo.png';
 
 const NAV = [
   { label: 'How it works', href: '#how' },
@@ -56,9 +57,12 @@ export default function Header() {
               backgroundColor: '#ffffff',
             }}
           />
-          <span className="text-[16px] font-semibold tracking-tight text-white">
-            tid
-          </span>
+          <img
+            src={tidLogo}
+            alt="tid"
+            className="h-[18px] w-auto"
+            draggable={false}
+          />
         </a>
 
         <div className="flex items-center gap-2.5 lg:flex-1 lg:justify-end">
