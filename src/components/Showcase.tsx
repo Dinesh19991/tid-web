@@ -1,257 +1,127 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from '../lib/gsap';
 
-/* The orbit: editorial typographic composition with concentric rings,
-   each carrying a capability word in italic serif that drifts slowly. */
+function Lock() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6">
+      <rect x="4.5" y="10.5" width="15" height="9.5" rx="2" />
+      <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" />
+    </svg>
+  );
+}
+function Shield() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6">
+      <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z" />
+      <path d="M9 12l2 2 4-4" />
+    </svg>
+  );
+}
+function Export() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6">
+      <path d="M12 15V4" />
+      <path d="M8 7l4-4 4 4" />
+      <path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" />
+    </svg>
+  );
+}
+function Offline() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6">
+      <rect x="6" y="3" width="12" height="18" rx="3" />
+      <path d="M11 18h2" />
+    </svg>
+  );
+}
 
-type Orbit = {
-  radius: number; // in % of container
-  duration: number; // seconds per full rotation
-  reverse?: boolean;
-  words: string[];
-  size: number; // px font-size for word
-  opacity: number;
-};
-
-const ORBITS: Orbit[] = [
+const POINTS = [
   {
-    radius: 18,
-    duration: 28,
-    words: ['capture', 'recall'],
-    size: 22,
-    opacity: 0.95,
+    Icon: Lock,
+    title: 'End-to-end encrypted',
+    body: 'Your notes are encrypted in transit and at rest. Only you hold the key — not even we can read them.',
   },
   {
-    radius: 32,
-    duration: 44,
-    reverse: true,
-    words: ['refine', 'compose', 'reflect'],
-    size: 28,
-    opacity: 0.7,
+    Icon: Shield,
+    title: 'Never trained on',
+    body: "tid is never trained on your private notes. Your thinking isn't a product, and it never will be.",
   },
   {
-    radius: 46,
-    duration: 60,
-    words: ['listen', 'remember', 'connect', 'focus'],
-    size: 34,
-    opacity: 0.55,
+    Icon: Export,
+    title: 'Export anytime',
+    body: 'Markdown, JSON, or PDF. Leave whenever you like — your second brain belongs entirely to you.',
+  },
+  {
+    Icon: Offline,
+    title: 'Capture on-device',
+    body: 'Jot offline and sync when you’re ready. No connection required to get a thought down.',
   },
 ];
 
 export default function Showcase() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const orbitRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from('.reveal-head', {
+      gsap.from('.sec-head, .sec-card', {
         opacity: 0,
         y: 30,
-        duration: 1,
+        duration: 0.8,
         ease: 'power3.out',
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
+        stagger: 0.08,
+        immediateRender: false,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        },
       });
-
-      gsap.from('.orbit-stage', {
-        opacity: 0,
-        scale: 0.9,
-        duration: 1.4,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' },
-      });
-
-      gsap.from('.orbit-credit', {
-        opacity: 0,
-        y: 20,
-        duration: 0.9,
-        ease: 'power3.out',
-        stagger: 0.12,
-        delay: 0.4,
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' },
-      });
-
-      // Gentle parallax pull as the section scrolls past
-      if (orbitRef.current) {
-        gsap.to(orbitRef.current, {
-          y: -50,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.2,
-          },
-        });
-      }
     }, sectionRef);
     return () => ctx.revert();
   }, []);
 
   return (
     <section
+      id="security"
       ref={sectionRef}
-      className="relative bg-black py-28 md:py-40 px-6 sm:px-8 lg:px-12 border-b border-white/[0.06] overflow-hidden"
+      className="relative bg-[#0a0a0d] py-24 md:py-32 px-6 sm:px-8 lg:px-12 border-t border-white/[0.06]"
     >
-      {/* Ambient halos */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[760px] h-[760px] bg-indigo-700/18 blur-[180px] rounded-full pointer-events-none" />
-      <div className="absolute top-20 right-[12%] w-[320px] h-[320px] bg-violet-700/14 blur-[140px] rounded-full pointer-events-none" />
-
-      <div className="relative max-w-6xl mx-auto">
-        <div className="mb-20 max-w-3xl reveal-head">
-          <p className="text-[11px] font-medium tracking-[0.32em] mb-7 uppercase">
-            <span className="text-indigo-300">Chapter 02</span>
-            <span className="mx-3 text-white/20">·</span>
-            <span className="text-white/50">The instrument</span>
-          </p>
+      <div className="relative max-w-7xl mx-auto">
+        <div className="sec-head mb-14 max-w-2xl">
           <h2
-            className="text-white"
             style={{
               fontFamily: "'Inter', sans-serif",
-              fontWeight: 400,
-              fontSize: 'clamp(40px, 5.6vw, 72px)',
-              lineHeight: 1.02,
-              letterSpacing: '-0.035em',
+              fontWeight: 300,
+              fontSize: 'clamp(28px, 3.8vw, 46px)',
+              lineHeight: 1.08,
+              letterSpacing: '-0.025em',
               margin: 0,
             }}
           >
-            One quiet center.{' '}
-            <span className="serif-i text-white/55">A whole orbit of thought.</span>
+            Your second brain
+            <br />
+            stays yours
           </h2>
-          <p className="mt-7 text-white/55 text-[15.5px] leading-relaxed max-w-xl">
-            tid sits in the middle of how you think. Every word you speak,
-            every line you type orbits one private place — surfaced when you
-            need it, silent when you don't.
+          <p className="mt-5 text-white/55 text-[14.5px] leading-relaxed max-w-md">
+            tid is private by design. Everything you capture is yours alone —
+            encrypted, never sold, and always portable.
           </p>
         </div>
 
-        {/* The orbit stage */}
-        <div
-          ref={orbitRef}
-          className="orbit-stage relative mx-auto aspect-square w-full max-w-[640px]"
-        >
-          {/* Concentric dotted rings */}
-          {ORBITS.map((o, idx) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {POINTS.map(({ Icon, title, body }) => (
             <div
-              key={`ring-${idx}`}
-              className="absolute inset-0 m-auto rounded-full border border-dashed border-white/8"
-              style={{
-                width: `${o.radius * 2}%`,
-                height: `${o.radius * 2}%`,
-              }}
-            />
-          ))}
-
-          {/* Outer faint ring */}
-          <div className="absolute inset-0 m-auto rounded-full border border-white/[0.05]" />
-
-          {/* Center glow / orb with editorial wordmark */}
-          <div className="absolute inset-0 m-auto flex items-center justify-center">
-            <div className="relative">
-              {/* radial glow */}
-              <div className="absolute -inset-12 rounded-full bg-indigo-500/25 blur-[60px]" />
-              <div className="absolute -inset-6 rounded-full bg-indigo-400/30 blur-[24px]" />
-              {/* core disc */}
-              <div className="relative grid place-items-center size-28 sm:size-32 rounded-full bg-gradient-to-br from-indigo-400 via-indigo-600 to-indigo-900 shadow-[inset_0_2px_0_rgba(255,255,255,0.25),0_0_60px_rgba(99,102,241,0.45)]">
-                <span
-                  className="text-white"
-                  style={{
-                    fontFamily: "'Instrument Serif', serif",
-                    fontStyle: 'italic',
-                    fontSize: '40px',
-                    letterSpacing: '-0.04em',
-                    lineHeight: 1,
-                  }}
-                >
-                  tid.
-                </span>
+              key={title}
+              className="sec-card rounded-2xl bg-[#141519] border border-white/[0.07] p-7 hover:border-white/20 transition-colors"
+            >
+              <div className="w-10 h-10 rounded-xl bg-white/[0.05] border border-white/10 grid place-items-center text-white/70 mb-5">
+                <Icon />
               </div>
-            </div>
-          </div>
-
-          {/* Word orbits — each word is positioned absolutely on its ring,
-              the wrapper rotates so the word travels around the orbit */}
-          {ORBITS.map((o, idx) =>
-            o.words.map((word, wi) => {
-              const offsetDeg = (360 / o.words.length) * wi;
-              return (
-                <div
-                  key={`w-${idx}-${wi}`}
-                  className="absolute inset-0 m-auto pointer-events-none"
-                  style={{
-                    width: `${o.radius * 2}%`,
-                    height: `${o.radius * 2}%`,
-                    animation: `orbit-${idx} ${o.duration}s linear infinite ${o.reverse ? 'reverse' : ''}`,
-                    transform: `rotate(${offsetDeg}deg)`,
-                  }}
-                >
-                  <span
-                    className="absolute left-1/2 -top-3 -translate-x-1/2 whitespace-nowrap text-white"
-                    style={{
-                      fontFamily: "'Instrument Serif', serif",
-                      fontStyle: 'italic',
-                      fontSize: `${o.size}px`,
-                      letterSpacing: '-0.02em',
-                      opacity: o.opacity,
-                      // counter-rotate so the word reads upright at all times
-                      animation: `counter-orbit-${idx} ${o.duration}s linear infinite ${o.reverse ? '' : 'reverse'}`,
-                      transformOrigin: 'center',
-                    }}
-                  >
-                    {word}
-                  </span>
-                </div>
-              );
-            })
-          )}
-
-          {/* Inject the per-ring keyframes — kept inline so the section is self-contained */}
-          <style>{`
-            @keyframes orbit-0 { to { transform: rotate(360deg); } }
-            @keyframes orbit-1 { to { transform: rotate(360deg); } }
-            @keyframes orbit-2 { to { transform: rotate(360deg); } }
-            @keyframes counter-orbit-0 { to { transform: translateX(-50%) rotate(-360deg); } }
-            @keyframes counter-orbit-1 { to { transform: translateX(-50%) rotate(-360deg); } }
-            @keyframes counter-orbit-2 { to { transform: translateX(-50%) rotate(-360deg); } }
-          `}</style>
-        </div>
-
-        {/* Editorial credits beneath the orbit */}
-        <div className="mt-20 grid grid-cols-1 sm:grid-cols-3 gap-x-12 gap-y-8 max-w-4xl mx-auto text-center sm:text-left">
-          {[
-            {
-              tag: 'I.',
-              h: 'One private center.',
-              p: 'Everything you save lives in one quiet place. No folders. No filing.',
-            },
-            {
-              tag: 'II.',
-              h: 'Surfaces in seconds.',
-              p: 'Ask in plain words. tid finds the line by what it meant — not what you typed.',
-            },
-            {
-              tag: 'III.',
-              h: 'Silent unless asked.',
-              p: 'No streaks. No nudges. tid waits for you, then disappears again.',
-            },
-          ].map((c) => (
-            <div key={c.tag} className="orbit-credit">
-              <div
-                className="text-indigo-300/80 mb-3"
-                style={{
-                  fontFamily: "'Instrument Serif', serif",
-                  fontStyle: 'italic',
-                  fontSize: '28px',
-                  letterSpacing: '-0.02em',
-                  lineHeight: 1,
-                }}
-              >
-                {c.tag}
-              </div>
-              <h4 className="text-white text-[16.5px] font-medium tracking-tight mb-2">
-                {c.h}
-              </h4>
-              <p className="text-white/50 text-[13.5px] leading-relaxed max-w-xs sm:max-w-none">
-                {c.p}
+              <h3 className="text-[16px] font-medium tracking-tight text-white">
+                {title}
+              </h3>
+              <p className="mt-2 text-white/50 text-[13px] leading-relaxed">
+                {body}
               </p>
             </div>
           ))}

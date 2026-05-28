@@ -1,51 +1,81 @@
+import { useEffect, useState } from 'react';
 import logoMark from '../assets/assets/Logo_mark.png';
-import { ArrowUpRight } from 'lucide-react';
 
-const NAV_LINKS = [
-  { label: 'CAPABILITIES', href: '#features' },
-  { label: 'PRICING', href: '#pricing' },
-  { label: 'JOIN', href: '#join' },
+const NAV = [
+  { label: 'How it works', href: '#how' },
+  { label: 'Outcomes', href: '#outcomes' },
+  { label: 'Use cases', href: '#usecases' },
+  { label: 'Pricing', href: '#pricing' },
 ];
 
 export default function Header() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const linkColor = 'text-white/65 hover:text-white';
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-6 sm:px-8 lg:px-12 py-6 flex justify-between items-center">
-      <a href="#" className="flex items-center gap-2 text-white">
-        <img
-          src={logoMark}
-          alt="tid"
-          className="h-7 w-7 object-contain"
-          draggable={false}
-        />
-        <span className="text-[17px] font-semibold tracking-tight lowercase">
-          tid
-        </span>
-      </a>
+    <header
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-[#0a0a0d]/80 backdrop-blur-md border-b border-white/[0.07]'
+          : 'border-b border-transparent'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between gap-4">
+        <nav className="hidden lg:flex items-center gap-7 flex-1">
+          {NAV.map((n) => (
+            <a
+              key={n.label}
+              href={n.href}
+              className={`text-[13px] whitespace-nowrap transition-colors ${linkColor}`}
+            >
+              {n.label}
+            </a>
+          ))}
+        </nav>
 
-      <nav className="liquid-glass rounded-full px-2 py-2 hidden md:flex items-center gap-1">
-        {NAV_LINKS.map(({ label, href }) => (
+        <a href="#" className="flex items-center gap-2 lg:flex-1 lg:justify-center">
+          <span
+            className="block w-6 h-6"
+            style={{
+              WebkitMaskImage: `url(${logoMark})`,
+              maskImage: `url(${logoMark})`,
+              WebkitMaskSize: 'contain',
+              maskSize: 'contain',
+              WebkitMaskRepeat: 'no-repeat',
+              maskRepeat: 'no-repeat',
+              WebkitMaskPosition: 'center',
+              maskPosition: 'center',
+              backgroundColor: '#ffffff',
+            }}
+          />
+          <span className="text-[16px] font-semibold tracking-tight text-white">
+            tid
+          </span>
+        </a>
+
+        <div className="flex items-center gap-2.5 lg:flex-1 lg:justify-end">
           <a
-            key={label}
-            href={href}
-            className="text-[11px] font-medium tracking-[0.18em] text-white/85 hover:text-white px-4 py-1.5 rounded-full transition-colors duration-200"
+            href="#"
+            className={`hidden sm:block text-[13px] transition-colors ${linkColor}`}
           >
-            {label}
+            Sign in
           </a>
-        ))}
-      </nav>
-
-      <a
-        href="#join"
-        data-cursor-label="start free"
-        className="liquid-glass rounded-full pl-5 pr-4 py-2.5 text-[11px] font-medium tracking-[0.18em] text-white/90 hover:text-white flex items-center gap-1.5 group"
-      >
-        START FREE
-        <ArrowUpRight
-          size={13}
-          strokeWidth={2}
-          className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200"
-        />
-      </a>
+          <a
+            href="#get-tid"
+            className="text-[13px] font-medium rounded-full px-4 py-2 transition bg-white text-[#0a0a0d] hover:bg-white/90"
+          >
+            Get tid
+          </a>
+        </div>
+      </div>
     </header>
   );
 }

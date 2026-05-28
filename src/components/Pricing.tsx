@@ -1,36 +1,66 @@
 import { useEffect, useRef } from 'react';
-import { Check } from 'lucide-react';
 import { gsap } from '../lib/gsap';
+
+function Check() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="15"
+      height="15"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.4"
+      className="shrink-0 mt-0.5"
+    >
+      <path d="M5 12.5l4.5 4.5L19 7" />
+    </svg>
+  );
+}
 
 const TIERS = [
   {
     name: 'Free',
     price: '$0',
-    period: 'forever',
-    description: 'Everything you need to start thinking out loud.',
+    cadence: 'forever',
+    blurb: 'Everything you need to start a second brain.',
     features: [
       'Up to 100 notes',
-      'Voice capture, 10 min / day',
+      'Daily voice capture',
       'Manual organization',
       'Sync across 2 devices',
     ],
-    cta: 'Get tid free',
-    highlight: false,
+    cta: 'Get started',
+    featured: false,
   },
   {
     name: 'Pro',
-    price: '$8',
-    period: 'per month',
-    description: 'Unlock the full power of AI note-making.',
+    price: '$12',
+    cadence: 'per month',
+    blurb: 'For people who think for a living.',
     features: [
-      'Unlimited notes',
-      'Unlimited voice capture',
-      'AI summaries & semantic search',
-      'Sync across all devices',
+      'Unlimited notes & voice',
+      'AI summaries & specs',
+      'Semantic search',
+      'Knowledge graph',
+      'Unlimited devices',
+    ],
+    cta: 'Start free trial',
+    featured: true,
+  },
+  {
+    name: 'Team',
+    price: '$20',
+    cadence: 'per seat / mo',
+    blurb: 'A shared brain for the whole crew.',
+    features: [
+      'Everything in Pro',
+      'Shared workspaces',
+      'Roles & permissions',
+      'Admin & SSO',
       'Priority support',
     ],
-    cta: 'Start 14-day trial',
-    highlight: true,
+    cta: 'Talk to us',
+    featured: false,
   },
 ];
 
@@ -39,21 +69,18 @@ export default function Pricing() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from('.reveal-head', {
+      gsap.from('.price-head, .price-card', {
         opacity: 0,
-        y: 30,
-        duration: 1,
+        y: 32,
+        duration: 0.85,
         ease: 'power3.out',
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
-      });
-      gsap.from('.tier-card', {
-        opacity: 0,
-        y: 60,
-        scale: 0.96,
-        duration: 1,
-        ease: 'power3.out',
-        stagger: 0.15,
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 65%' },
+        stagger: 0.1,
+        immediateRender: false,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        },
       });
     }, sectionRef);
     return () => ctx.revert();
@@ -63,128 +90,92 @@ export default function Pricing() {
     <section
       id="pricing"
       ref={sectionRef}
-      className="relative bg-black py-28 md:py-40 px-6 sm:px-8 lg:px-12 border-b border-white/[0.06] overflow-hidden"
+      className="relative bg-[#0a0a0d] py-24 md:py-32 px-6 sm:px-8 lg:px-12 border-t border-white/[0.06]"
     >
-      <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-indigo-700/25 blur-[180px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-[-20%] right-[-10%] w-[480px] h-[480px] bg-violet-700/15 blur-[170px] rounded-full pointer-events-none" />
-
-      <div className="relative max-w-5xl mx-auto">
-        <div className="mb-20 max-w-3xl reveal-head">
-          <p className="text-[11px] font-medium tracking-[0.32em] mb-7 uppercase">
-            <span className="text-indigo-300">Chapter 09</span>
-            <span className="mx-3 text-white/20">·</span>
-            <span className="text-white/50">Pricing</span>
-          </p>
+      <div className="relative max-w-6xl mx-auto">
+        <div className="price-head mb-14 max-w-2xl">
           <h2
-            className="text-white"
             style={{
               fontFamily: "'Inter', sans-serif",
-              fontWeight: 400,
-              fontSize: 'clamp(40px, 5.6vw, 72px)',
-              lineHeight: 1.02,
-              letterSpacing: '-0.035em',
+              fontWeight: 300,
+              fontSize: 'clamp(28px, 3.8vw, 46px)',
+              lineHeight: 1.08,
+              letterSpacing: '-0.025em',
               margin: 0,
             }}
           >
-            Simple pricing.{' '}
-            <span className="serif-i text-white/55">No surprises.</span>
+            Start free.
+            <br />
+            Upgrade when it clicks.
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
-          {TIERS.map((t) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
+          {TIERS.map((tier) => (
             <div
-              key={t.name}
-              className={`tier-card relative rounded-3xl p-10 overflow-hidden transition-all duration-500 hover:-translate-y-1 ${
-                t.highlight
-                  ? 'bg-gradient-to-br from-indigo-600 via-indigo-700 to-indigo-900 text-white shadow-[0_30px_60px_-20px_rgba(79,70,229,0.5)]'
-                  : 'glass-dark glass-dark-hover'
+              key={tier.name}
+              className={`price-card relative rounded-2xl p-8 flex flex-col border transition-colors ${
+                tier.featured
+                  ? 'bg-gradient-to-b from-[#1b2150] to-[#101119] border-[#5670d8]/40 shadow-[0_40px_90px_-40px_rgba(86,112,216,0.5)]'
+                  : 'bg-[#141519] border-white/[0.07] hover:border-white/15'
               }`}
             >
-              {t.highlight && (
-                <>
-                  <div className="absolute -top-32 -right-20 w-72 h-72 rounded-full bg-white/15 blur-3xl pointer-events-none" />
-                  <div className="absolute -bottom-32 -left-20 w-72 h-72 rounded-full bg-violet-400/30 blur-3xl pointer-events-none" />
-                </>
+              {tier.featured && (
+                <span className="absolute top-5 right-5 text-[9.5px] tracking-[0.18em] uppercase text-[#aebcf2] bg-[#5670d8]/20 border border-[#5670d8]/40 rounded-full px-2.5 py-1 font-medium">
+                  Popular
+                </span>
               )}
-
-              <div className="relative z-10">
-                <div className="flex items-center justify-between mb-2">
-                  <h3
-                    className="text-[22px] font-medium tracking-tight text-white"
-                  >
-                    {t.name}
-                  </h3>
-                  {t.highlight && (
-                    <span className="text-[10px] font-medium tracking-[0.16em] text-indigo-100 bg-white/15 border border-white/20 rounded-full px-3 py-1">
-                      POPULAR
-                    </span>
-                  )}
-                </div>
-                <p
-                  className={`text-[14px] mb-8 max-w-xs ${
-                    t.highlight ? 'text-indigo-100/80' : 'text-white/55'
-                  }`}
+              <h3 className="text-white text-[15px] font-medium tracking-tight">
+                {tier.name}
+              </h3>
+              <div className="mt-4 flex items-baseline gap-1.5">
+                <span
+                  className="text-white"
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 600,
+                    fontSize: '44px',
+                    letterSpacing: '-0.04em',
+                    lineHeight: 1,
+                  }}
                 >
-                  {t.description}
-                </p>
-                <div className="flex items-baseline gap-2 mb-10">
-                  <span
-                    className="text-[56px] font-medium leading-none text-white"
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      letterSpacing: '-0.035em',
-                    }}
-                  >
-                    {t.price}
-                  </span>
-                  <span
-                    className={`text-[14px] ${
-                      t.highlight ? 'text-indigo-100/70' : 'text-white/50'
-                    }`}
-                  >
-                    {t.period}
-                  </span>
-                </div>
-                <ul className="space-y-3.5 mb-10">
-                  {t.features.map((f) => (
-                    <li key={f} className="flex items-start gap-3">
-                      <Check
-                        size={16}
-                        strokeWidth={2}
-                        className={`mt-0.5 flex-shrink-0 ${
-                          t.highlight ? 'text-indigo-200' : 'text-indigo-300'
-                        }`}
-                      />
-                      <span
-                        className={`text-[14.5px] ${
-                          t.highlight ? 'text-white/90' : 'text-white/85'
-                        }`}
-                      >
-                        {f}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  type="button"
-                  className={`w-full rounded-full py-3.5 text-[14px] font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] ${
-                    t.highlight
-                      ? 'bg-white text-indigo-700 hover:shadow-[0_0_40px_8px_rgba(255,255,255,0.25)]'
-                      : 'bg-white text-black hover:bg-indigo-200'
-                  }`}
-                >
-                  {t.cta}
-                </button>
+                  {tier.price}
+                </span>
+                <span className="text-white/40 text-[12.5px]">
+                  {tier.cadence}
+                </span>
               </div>
+              <p className="mt-3 text-white/50 text-[13px] leading-relaxed min-h-[40px]">
+                {tier.blurb}
+              </p>
+
+              <button
+                type="button"
+                className={`mt-6 w-full rounded-full py-2.5 text-[13.5px] font-medium transition ${
+                  tier.featured
+                    ? 'bg-white text-[#0a0a0d] hover:scale-[1.02] active:scale-95'
+                    : 'border border-white/15 text-white/90 hover:bg-white/[0.05] hover:border-white/30'
+                }`}
+              >
+                {tier.cta}
+              </button>
+
+              <ul className="mt-8 space-y-3">
+                {tier.features.map((f) => (
+                  <li
+                    key={f}
+                    className="flex items-start gap-2.5 text-white/65 text-[13px]"
+                  >
+                    <span className={tier.featured ? 'text-[#aebcf2]' : 'text-white/55'}>
+                      <Check />
+                    </span>
+                    {f}
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>
-
-        <p className="text-center text-white/45 text-[12px] mt-10 tracking-wide">
-          Both plans include end-to-end encryption · 99.9% uptime · Cancel
-          anytime.
-        </p>
       </div>
     </section>
   );

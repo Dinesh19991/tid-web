@@ -1,55 +1,39 @@
-import { useEffect, useRef } from 'react';
-import { Mic, Wand2, MessageSquare } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from '../lib/gsap';
 
-const STEPS = [
-  {
-    n: '01',
-    icon: Mic,
-    title: 'Capture',
-    body: 'Tap, talk, or type. tid grabs every thought without friction or judgement.',
-  },
-  {
-    n: '02',
-    icon: Wand2,
-    title: 'Refine',
-    body: 'AI cleans up, summarizes, and tags. Your notes structure themselves.',
-  },
-  {
-    n: '03',
-    icon: MessageSquare,
-    title: 'Recall',
-    body: 'Ask anything in plain English. tid finds it — and connects the dots.',
-  },
+const TABS = [
+  { n: '1', label: 'Capture', blurb: 'Speak, type, or paste — anything lands in one inbox.' },
+  { n: '2', label: 'Organize', blurb: 'tid clusters by meaning into clean, linked notes.' },
+  { n: '3', label: 'Recall', blurb: 'Ask in plain words and get the exact thought back.' },
+  { n: '4', label: 'Improve', blurb: 'Your second brain gets sharper with every capture.' },
+];
+
+const ROWS = [
+  { name: 'Albert Flores', role: 'Q3 planning memo', status: 'Summarized', tone: 'ok' },
+  { name: 'Darrell Steward', role: 'Customer call notes', status: 'Tasks found', tone: 'ok' },
+  { name: 'Kathryn Murphy', role: 'Reading highlights', status: '2 links added', tone: 'warn' },
+  { name: 'Jack Cooper', role: 'Idea: pricing tiers', status: 'Organizing…', tone: 'mute' },
+  { name: 'Jerome Bell', role: 'Voice memo · 6m', status: 'Transcribed', tone: 'ok' },
 ];
 
 export default function HowItWorks() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from('.reveal-head', {
+      gsap.from('.gl-head, .gl-tabs, .gl-visual', {
         opacity: 0,
         y: 30,
-        duration: 1,
+        duration: 0.85,
         ease: 'power3.out',
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
-      });
-      gsap.from('.step-row', {
-        opacity: 0,
-        y: 40,
-        duration: 0.9,
-        ease: 'power3.out',
-        stagger: 0.18,
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 65%' },
-      });
-      gsap.from('.step-numeral', {
-        opacity: 0,
-        scale: 0.85,
-        duration: 1,
-        ease: 'power3.out',
-        stagger: 0.18,
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 65%' },
+        stagger: 0.1,
+        immediateRender: false,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        },
       });
     }, sectionRef);
     return () => ctx.revert();
@@ -58,80 +42,92 @@ export default function HowItWorks() {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-black py-28 md:py-40 px-6 sm:px-8 lg:px-12 border-b border-white/[0.06] overflow-hidden"
+      className="relative bg-[#0e0f13] py-24 md:py-32 px-6 sm:px-8 lg:px-12 border-t border-white/[0.06]"
     >
-      <div className="absolute top-1/3 -left-[6%] w-[420px] h-[420px] bg-indigo-700/12 blur-[160px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 right-[6%] w-[420px] h-[420px] bg-violet-700/10 blur-[160px] rounded-full pointer-events-none" />
-
-      <div className="relative max-w-5xl mx-auto">
-        <div className="mb-20 max-w-3xl reveal-head">
-          <p className="text-[11px] font-medium tracking-[0.32em] mb-7 uppercase">
-            <span className="text-indigo-300">Chapter 05</span>
-            <span className="mx-3 text-white/20">·</span>
-            <span className="text-white/50">Workflow</span>
-          </p>
+      <div className="relative max-w-6xl mx-auto">
+        <div className="gl-head text-center max-w-2xl mx-auto mb-12">
           <h2
-            className="text-white"
             style={{
               fontFamily: "'Inter', sans-serif",
-              fontWeight: 400,
-              fontSize: 'clamp(40px, 5.6vw, 72px)',
-              lineHeight: 1.02,
-              letterSpacing: '-0.035em',
+              fontWeight: 300,
+              fontSize: 'clamp(28px, 3.8vw, 46px)',
+              lineHeight: 1.08,
+              letterSpacing: '-0.025em',
               margin: 0,
             }}
           >
-            Three steps from{' '}
-            <span className="serif-i text-white/55">thought</span> to note.
+            Get started in minutes, not months
           </h2>
         </div>
 
-        <div className="relative">
-          <div className="absolute left-[88px] sm:left-[120px] top-4 bottom-4 w-px bg-gradient-to-b from-transparent via-indigo-400/60 to-transparent" />
+        {/* tabs */}
+        <div className="gl-tabs grid grid-cols-2 md:grid-cols-4 gap-3 mb-10 max-w-4xl mx-auto">
+          {TABS.map((t, i) => (
+            <button
+              key={t.label}
+              onClick={() => setActive(i)}
+              onMouseEnter={() => setActive(i)}
+              className={`text-left rounded-xl border px-4 py-3 transition-colors ${
+                active === i
+                  ? 'bg-white/[0.07] border-white/15'
+                  : 'border-white/[0.06] hover:border-white/15'
+              }`}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <span
+                  className={`grid place-items-center w-5 h-5 rounded-full text-[10px] font-semibold ${
+                    active === i
+                      ? 'bg-white text-[#0a0a0d]'
+                      : 'bg-white/[0.08] text-white/50'
+                  }`}
+                >
+                  {t.n}
+                </span>
+                <span className="text-[13.5px] font-medium text-white">
+                  {t.label}
+                </span>
+              </div>
+              <p className="text-[11.5px] text-white/45 leading-snug">
+                {t.blurb}
+              </p>
+            </button>
+          ))}
+        </div>
 
-          <div className="space-y-16">
-            {STEPS.map(({ n, icon: Icon, title, body }) => (
+        {/* big product mockup */}
+        <div className="gl-visual rounded-2xl bg-[#16151a] border border-white/[0.06] shadow-[0_50px_100px_-40px_rgba(0,0,0,0.55)] overflow-hidden max-w-4xl mx-auto">
+          <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/[0.06]">
+            <span className="text-white/85 text-[13px] font-medium">Inbox</span>
+            <span className="text-white/35 text-[11px]">processing 124/1000 notes</span>
+          </div>
+          <div className="divide-y divide-white/[0.05]">
+            {ROWS.map((r) => (
               <div
-                key={n}
-                className="step-row grid grid-cols-[88px_1fr] sm:grid-cols-[120px_1fr] gap-8 sm:gap-14 items-start"
+                key={r.name}
+                className="flex items-center gap-4 px-5 py-3.5"
               >
-                <div className="text-right relative">
-                  <div
-                    className="step-numeral text-indigo-300/90 leading-none"
-                    style={{
-                      fontFamily: "'Instrument Serif', serif",
-                      fontStyle: 'italic',
-                      fontSize: 'clamp(56px, 7vw, 96px)',
-                      letterSpacing: '-0.02em',
-                    }}
-                  >
-                    {n}
+                <div className="w-9 h-9 rounded-full bg-white/10 border border-white/10 grid place-items-center text-white/70 text-[11px] font-medium shrink-0">
+                  {r.name.split(' ').map((w) => w[0]).join('')}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-white/90 text-[13px] font-medium truncate">
+                    {r.name}
+                  </div>
+                  <div className="text-white/40 text-[11.5px] truncate">
+                    {r.role}
                   </div>
                 </div>
-
-                <div className="pt-3">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-9 h-9 rounded-full bg-white/[0.06] border border-white/10 backdrop-blur-md flex items-center justify-center shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
-                      <Icon
-                        size={16}
-                        strokeWidth={1.5}
-                        className="text-indigo-300"
-                      />
-                    </div>
-                    <h3
-                      className="text-white text-[28px] font-medium tracking-tight"
-                      style={{
-                        fontFamily: "'Inter', sans-serif",
-                        letterSpacing: '-0.02em',
-                      }}
-                    >
-                      {title}
-                    </h3>
-                  </div>
-                  <p className="text-white/55 text-[15.5px] leading-relaxed max-w-lg">
-                    {body}
-                  </p>
-                </div>
+                <span
+                  className={`text-[11px] rounded-full px-2.5 py-1 border whitespace-nowrap ${
+                    r.tone === 'ok'
+                      ? 'text-emerald-300/90 border-emerald-400/20 bg-emerald-400/10'
+                      : r.tone === 'warn'
+                      ? 'text-amber-300/90 border-amber-400/20 bg-amber-400/10'
+                      : 'text-white/50 border-white/10 bg-white/[0.04]'
+                  }`}
+                >
+                  {r.status}
+                </span>
               </div>
             ))}
           </div>

@@ -1,26 +1,28 @@
 import { useEffect } from 'react';
 import { ScrollTrigger } from './lib/gsap';
+import Loader from './components/Loader';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import Manifesto from './components/Manifesto';
-import Stats from './components/Stats';
 import Marquee from './components/Marquee';
-import Showcase from './components/Showcase';
+import Manifesto from './components/Manifesto';
 import Features from './components/Features';
-import Scenes from './components/Scenes';
+import Testimonial from './components/Testimonial';
+import Stats from './components/Stats';
 import HowItWorks from './components/HowItWorks';
 import UseCases from './components/UseCases';
-import Testimonial from './components/Testimonial';
+import Showcase from './components/Showcase';
+import Scenes from './components/Scenes';
+import Pricing from './components/Pricing';
 import FAQ from './components/FAQ';
 import EndScene from './components/EndScene';
 import Footer from './components/Footer';
-import CursorBlob from './components/CursorBlob';
 
 export default function App() {
   useEffect(() => {
-    // After all sections mount (including pinned ones that inject spacers),
-    // recalculate every ScrollTrigger position. Without this, reveals in
-    // sections that follow pinned sections can stay stuck at opacity 0.
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
     const t1 = window.setTimeout(() => ScrollTrigger.refresh(), 50);
     const t2 = window.setTimeout(() => ScrollTrigger.refresh(), 300);
     const t3 = window.setTimeout(() => ScrollTrigger.refresh(), 1200);
@@ -33,26 +35,22 @@ export default function App() {
 
   return (
     <div
-      className="relative min-h-screen bg-black text-white overflow-x-hidden"
+      className="relative min-h-screen bg-[#0a0a0d] text-white [overflow-x:clip]"
       style={{ fontFamily: "'Inter', sans-serif" }}
     >
-      {/* Global cinematic film grain (subtle overlay) */}
-      <div className="grain" aria-hidden />
-
-      {/* Custom cursor — only visible on hover-capable devices */}
-      <CursorBlob />
-
+      <Loader />
       <Header />
       <Hero />
-      <Manifesto />
-      <Stats />
       <Marquee />
-      <Showcase />
+      <Manifesto />
       <Features />
-      <Scenes />
+      <Testimonial />
+      <Stats />
       <HowItWorks />
       <UseCases />
-      <Testimonial />
+      <Showcase />
+      <Scenes />
+      <Pricing />
       <FAQ />
       <EndScene />
       <Footer />

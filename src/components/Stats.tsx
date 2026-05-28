@@ -1,125 +1,23 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from '../lib/gsap';
-
-const STATS = [
-  { value: 12, suffix: 'M+', label: 'Notes captured' },
-  { value: 50, suffix: 'k+', label: 'Active thinkers' },
-  { value: 99.9, suffix: '%', label: 'Uptime' },
-  { value: 180, suffix: 'ms', label: 'Avg AI response' },
-];
-
-function useCountUp(target: number, durationMs: number, start: boolean) {
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    if (!start) return;
-    let raf = 0;
-    const startTime = performance.now();
-    const tick = (t: number) => {
-      const elapsed = t - startTime;
-      const p = Math.min(elapsed / durationMs, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setValue(target * eased);
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [target, durationMs, start]);
-  return value;
-}
-
-function StatBlock({
-  value,
-  suffix,
-  label,
-  index,
-}: {
-  value: number;
-  suffix: string;
-  label: string;
-  index: number;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.4 },
-    );
-    obs.observe(node);
-    return () => obs.disconnect();
-  }, []);
-
-  const animated = useCountUp(value, 1800, inView);
-  const isFloat = !Number.isInteger(value);
-  const display = isFloat
-    ? animated.toFixed(1)
-    : Math.floor(animated).toLocaleString();
-
-  return (
-    <div ref={ref} className="reveal-item border-l border-white/10 pl-6 pt-2 pb-3">
-      <div className="text-indigo-300 text-[10px] font-medium tracking-[0.32em] mb-7 uppercase tabular-nums">
-        Fig. {String(index + 1).padStart(2, '0')}
-      </div>
-      <div className="flex items-baseline gap-1">
-        <span
-          className="text-white tabular-nums"
-          style={{
-            fontFamily: "'Instrument Serif', serif",
-            fontStyle: 'italic',
-            fontWeight: 400,
-            fontSize: 'clamp(72px, 10vw, 156px)',
-            letterSpacing: '-0.04em',
-            lineHeight: 0.85,
-          }}
-        >
-          {display}
-        </span>
-        <span
-          className="text-indigo-300/85"
-          style={{
-            fontFamily: "'Instrument Serif', serif",
-            fontStyle: 'italic',
-            fontSize: 'clamp(22px, 2.4vw, 32px)',
-            letterSpacing: '-0.02em',
-          }}
-        >
-          {suffix}
-        </span>
-      </div>
-      <div className="text-white/50 text-[11px] tracking-[0.22em] uppercase mt-6 font-medium leading-snug max-w-[18ch]">
-        {label}
-      </div>
-    </div>
-  );
-}
 
 export default function Stats() {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from('.reveal-head', {
+      gsap.from('.o-head, .o-card', {
         opacity: 0,
         y: 30,
-        duration: 1,
+        duration: 0.8,
         ease: 'power3.out',
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
-      });
-      gsap.from('.reveal-item', {
-        opacity: 0,
-        y: 40,
-        duration: 0.9,
-        ease: 'power3.out',
-        stagger: 0.12,
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 65%' },
+        stagger: 0.1,
+        immediateRender: false,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        },
       });
     }, sectionRef);
     return () => ctx.revert();
@@ -127,47 +25,119 @@ export default function Stats() {
 
   return (
     <section
+      id="outcomes"
       ref={sectionRef}
-      className="relative bg-black py-28 md:py-40 px-6 sm:px-8 lg:px-12 border-b border-white/[0.06] overflow-hidden"
+      className="relative bg-[#0a0a0d] py-24 md:py-32 px-6 sm:px-8 lg:px-12 border-t border-white/[0.06]"
     >
-      {/* Ambient halos */}
-      <div className="absolute -top-32 left-[8%] w-[460px] h-[460px] bg-indigo-700/15 blur-[170px] rounded-full pointer-events-none" />
-      <div className="absolute -bottom-20 right-[6%] w-[460px] h-[460px] bg-violet-700/12 blur-[170px] rounded-full pointer-events-none" />
-
       <div className="relative max-w-7xl mx-auto">
-        <div className="mb-24 flex flex-col md:flex-row md:items-end md:justify-between gap-10 reveal-head">
-          <div className="max-w-2xl">
-            <p className="text-[11px] font-medium tracking-[0.32em] mb-7 uppercase">
-              <span className="text-indigo-300">Chapter 01</span>
-              <span className="mx-3 text-white/20">·</span>
-              <span className="text-white/50">By the numbers</span>
-            </p>
-            <h2
-              className="text-white"
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 400,
-                fontSize: 'clamp(40px, 5vw, 72px)',
-                lineHeight: 1.02,
-                letterSpacing: '-0.035em',
-                margin: 0,
-              }}
-            >
-              Built for the way people{' '}
-              <span className="serif-i text-white/55">actually</span> think.
-            </h2>
-          </div>
-          <p className="max-w-xs text-white/50 text-[13.5px] leading-relaxed md:text-right md:pb-2">
-            A snapshot of the second brain
+        <div className="o-head mb-14 max-w-2xl">
+          <h2
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 300,
+              fontSize: 'clamp(28px, 3.8vw, 46px)',
+              lineHeight: 1.08,
+              letterSpacing: '-0.025em',
+              margin: 0,
+            }}
+          >
+            Clearer thinking. Better recall.
             <br />
-            <span className="serif-i text-indigo-300">— in production.</span>
-          </p>
+            Less friction.
+          </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-14">
-          {STATS.map((s, i) => (
-            <StatBlock key={s.label} {...s} index={i} />
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {/* card 1 — capture velocity */}
+          <div className="o-card rounded-2xl bg-[#141519] border border-white/[0.07] overflow-hidden flex flex-col">
+            <div className="p-6 h-44 relative">
+              <div className="text-[9.5px] tracking-[0.2em] uppercase text-white/30 mb-3">
+                Captures this week
+              </div>
+              <svg viewBox="0 0 240 90" className="w-full h-24">
+                <defs>
+                  <linearGradient id="oc1" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stopColor="rgba(255,255,255,0.35)" />
+                    <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M0 70 L30 62 L60 66 L90 48 L120 52 L150 36 L180 40 L210 20 L240 26 L240 90 L0 90 Z"
+                  fill="url(#oc1)"
+                />
+                <path
+                  d="M0 70 L30 62 L60 66 L90 48 L120 52 L150 36 L180 40 L210 20 L240 26"
+                  fill="none"
+                  stroke="white"
+                  strokeOpacity="0.7"
+                  strokeWidth="1.6"
+                />
+              </svg>
+            </div>
+            <div className="px-6 pb-6 pt-2 border-t border-white/[0.06]">
+              <h3 className="text-white text-[16px] font-medium tracking-tight">
+                Capture that scales
+              </h3>
+              <p className="text-white/50 text-[13px] leading-relaxed mt-2">
+                Speak or type freely — tid keeps up and tidies every fragment.
+              </p>
+            </div>
+          </div>
+
+          {/* card 2 — informed recall */}
+          <div className="o-card rounded-2xl bg-[#141519] border border-white/[0.07] overflow-hidden flex flex-col">
+            <div className="p-6 h-44 flex flex-col justify-center gap-2.5">
+              {['Where did I note the pricing idea?', 'Found · 3 linked notes', 'Summarized in 180ms'].map(
+                (t, i) => (
+                  <div
+                    key={i}
+                    className="rounded-lg bg-white/[0.05] border border-white/[0.06] px-3 py-2 text-white/70 text-[11.5px]"
+                    style={{ opacity: 1 - i * 0.18 }}
+                  >
+                    {t}
+                  </div>
+                ),
+              )}
+            </div>
+            <div className="px-6 pb-6 pt-2 border-t border-white/[0.06]">
+              <h3 className="text-white text-[16px] font-medium tracking-tight">
+                Better-informed recall
+              </h3>
+              <p className="text-white/50 text-[13px] leading-relaxed mt-2">
+                Ask in plain words and get the exact thought, sourced.
+              </p>
+            </div>
+          </div>
+
+          {/* card 3 — faster */}
+          <div className="o-card rounded-2xl bg-[#141519] border border-white/[0.07] overflow-hidden flex flex-col">
+            <div className="p-6 h-44 flex items-center justify-center">
+              <div className="text-center">
+                <div
+                  className="text-white"
+                  style={{
+                    fontWeight: 600,
+                    fontSize: 56,
+                    letterSpacing: '-0.04em',
+                    lineHeight: 1,
+                  }}
+                >
+                  3×
+                </div>
+                <div className="text-white/45 text-[11px] tracking-[0.16em] uppercase mt-2">
+                  faster to find anything
+                </div>
+              </div>
+            </div>
+            <div className="px-6 pb-6 pt-2 border-t border-white/[0.06]">
+              <h3 className="text-white text-[16px] font-medium tracking-tight">
+                Faster thinking cycles
+              </h3>
+              <p className="text-white/50 text-[13px] leading-relaxed mt-2">
+                Less time filing and searching, more time actually thinking.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

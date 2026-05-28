@@ -1,26 +1,47 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from '../lib/gsap';
 
+const QUOTES = [
+  {
+    quote:
+      'The first product I have seen that nails the capture experience. This is what modern note-taking should feel like.',
+    name: 'Leonard Suarez',
+    role: 'Writer',
+    initials: 'LS',
+  },
+  {
+    quote:
+      'tid dramatically speeds up my process by giving me an answer immediately. It is far more useful than scrolling through a folder tree.',
+    name: 'Han Fu',
+    role: 'Founder, Poppins',
+    initials: 'HF',
+  },
+  {
+    quote:
+      'tid materially strengthens my recall. It cares about the context I capture and resurfaces it exactly when I need it.',
+    name: 'Joseph Henry',
+    role: 'PhD candidate',
+    initials: 'JH',
+  },
+];
+
 export default function Testimonial() {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from('.reveal-quote', {
+      gsap.from('.t-head, .t-card', {
         opacity: 0,
         y: 30,
-        scale: 0.98,
-        duration: 1.2,
+        duration: 0.8,
         ease: 'power3.out',
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' },
-      });
-      gsap.from('.reveal-byline', {
-        opacity: 0,
-        y: 20,
-        duration: 1,
-        ease: 'power3.out',
-        delay: 0.2,
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' },
+        stagger: 0.1,
+        immediateRender: false,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        },
       });
     }, sectionRef);
     return () => ctx.revert();
@@ -29,77 +50,48 @@ export default function Testimonial() {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-black py-28 md:py-40 px-6 sm:px-8 lg:px-12 border-b border-white/[0.06] overflow-hidden"
+      className="relative bg-[#0a0a0d] py-24 md:py-32 px-6 sm:px-8 lg:px-12 border-t border-white/[0.06]"
     >
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[760px] h-[460px] bg-indigo-700/18 blur-[170px] rounded-full pointer-events-none" />
-
-      <div className="relative max-w-5xl mx-auto">
-        {/* Editorial slug */}
-        <div className="reveal-byline flex items-center justify-center gap-3 mb-16 text-[10px] tracking-[0.36em] uppercase font-medium">
-          <span className="block w-6 h-px bg-indigo-300/50" />
-          <span className="text-indigo-300">Chapter 07</span>
-          <span className="text-white/20">·</span>
-          <span className="text-white/50">From the field</span>
-          <span className="block w-6 h-px bg-indigo-300/50" />
-        </div>
-
-        {/* Oversized quote-mark mark */}
-        <div
-          aria-hidden
-          className="reveal-byline pointer-events-none select-none absolute -top-2 left-1/2 -translate-x-1/2 text-indigo-300/30 leading-none"
-          style={{
-            fontFamily: "'Instrument Serif', serif",
-            fontStyle: 'italic',
-            fontSize: 'clamp(180px, 22vw, 320px)',
-            letterSpacing: '-0.04em',
-          }}
-        >
-          “
-        </div>
-
-        <blockquote
-          className="relative text-white text-center reveal-quote max-w-4xl mx-auto"
-          style={{
-            fontFamily: "'Instrument Serif', serif",
-            fontWeight: 400,
-            fontSize: 'clamp(34px, 5.2vw, 76px)',
-            lineHeight: 1.08,
-            letterSpacing: '-0.02em',
-            margin: 0,
-          }}
-        >
-          tid is the first app that{' '}
-          <span className="italic text-indigo-300/90">actually</span>{' '}
-          understands what I meant — not just what I typed. It's like having a
-          research assistant who{' '}
-          <span className="italic text-indigo-300/90">never forgets.</span>
-        </blockquote>
-
-        {/* Byline rail */}
-        <div className="reveal-byline mt-20 flex items-center justify-center gap-6">
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-indigo-700 border border-white/15 flex items-center justify-center shadow-[0_0_24px_rgba(99,102,241,0.45)]">
-            <span className="text-white text-[13px] font-medium">MR</span>
-          </div>
-          <div className="text-left">
-            <div className="text-white text-[15px] font-medium tracking-tight">
-              Maya Rao
-            </div>
-            <div className="text-white/45 text-[11px] tracking-[0.22em] uppercase mt-0.5">
-              Writer · Founder, Field Notes
-            </div>
-          </div>
-          <span className="block w-px h-8 bg-white/15 mx-1" />
-          <div
-            className="text-white/40"
+      <div className="relative max-w-7xl mx-auto">
+        <div className="t-head mb-14 max-w-2xl">
+          <h2
             style={{
-              fontFamily: "'Instrument Serif', serif",
-              fontStyle: 'italic',
-              fontSize: '18px',
-              letterSpacing: '-0.01em',
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 300,
+              fontSize: 'clamp(28px, 3.8vw, 46px)',
+              lineHeight: 1.08,
+              letterSpacing: '-0.025em',
+              margin: 0,
             }}
           >
-            Issue No. 07
-          </div>
+            What fast-growing teams
+            <br />
+            say about tid
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {QUOTES.map((q) => (
+            <div
+              key={q.name}
+              className="t-card rounded-2xl bg-[#141519] border border-white/[0.07] p-8 flex flex-col justify-between min-h-[260px]"
+            >
+              <p className="text-white/85 text-[15px] leading-relaxed">
+                &ldquo;{q.quote}&rdquo;
+              </p>
+              <div className="mt-8 flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-white/10 border border-white/15 grid place-items-center text-white/80 text-[11px] font-semibold">
+                  {q.initials}
+                </div>
+                <div>
+                  <div className="text-white text-[13px] font-medium tracking-tight">
+                    {q.name}
+                  </div>
+                  <div className="text-white/45 text-[11px]">{q.role}</div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

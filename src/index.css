@@ -20,11 +20,21 @@ body,
 
 body {
   margin: 0;
-  background: #000;
-  color: #fff;
-  font-family: 'Barlow', sans-serif;
+  background: #0a0a0d;
+  color: #ededed;
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* blue twilight atmosphere used by hero / cta / faq */
+.mountain-bg {
+  background:
+    radial-gradient(120% 90% at 50% -10%, #d2e0fb 0%, #8fb0ef 15%, #4f72d6 35%, #2c45a0 56%, #16245e 80%, #080d24 100%);
+}
+.mountain-ridge {
+  background:
+    linear-gradient(180deg, rgba(8,13,36,0) 0%, rgba(8,13,36,0.4) 60%, rgba(8,13,36,0.9) 100%);
 }
 
 .liquid-glass {
@@ -173,6 +183,23 @@ body {
   animation-play-state: paused;
 }
 
+@keyframes marquee-rev {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee-rev {
+  animation: marquee-rev 46s linear infinite;
+}
+
+.animate-marquee-rev:hover {
+  animation-play-state: paused;
+}
+
 @keyframes pulse-glow {
   0%,
   100% {
@@ -193,6 +220,52 @@ body {
 
 .animate-spin-slow {
   animation: spin-slow 14s linear infinite;
+}
+
+@keyframes iso-float-a {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+
+@keyframes iso-float-b {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-iso-a {
+  animation: iso-float-a 4s ease-in-out infinite;
+}
+
+.animate-iso-b {
+  animation: iso-float-b 4.8s ease-in-out infinite 0.5s;
+}
+
+@keyframes iso-bob {
+  0%,
+  100% {
+    transform: translateZ(0);
+  }
+  50% {
+    transform: translateZ(11px);
+  }
+}
+
+.animate-iso-bob {
+  animation: iso-bob 4.2s ease-in-out infinite;
+}
+
+.animate-iso-bob-2 {
+  animation: iso-bob 5s ease-in-out infinite 0.6s;
 }
 
 /* ::selection refinement for the cinematic dark moments */
