@@ -28,10 +28,135 @@ body {
 }
 
 /* blue twilight atmosphere used by hero / cta / faq */
-.mountain-bg {
-  background:
-    radial-gradient(120% 90% at 50% -10%, #d2e0fb 0%, #8fb0ef 15%, #4f72d6 35%, #2c45a0 56%, #16245e 80%, #080d24 100%);
+@property --mountain-grad-x {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 50%;
 }
+
+@property --mountain-grad-y {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: -10%;
+}
+
+@property --mountain-grad-radius-x {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 120%;
+}
+
+@property --mountain-grad-radius-y {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 90%;
+}
+
+@property --mountain-grad-color1 {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #d2e0fb;
+}
+
+@property --mountain-grad-color2 {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #8fb0ef;
+}
+
+@property --mountain-grad-color3 {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #4f72d6;
+}
+
+@property --mountain-grad-color4 {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #2c45a0;
+}
+
+@property --mountain-grad-color5 {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #16245e;
+}
+
+.mountain-bg {
+  /* Fallback static gradient for legacy browsers */
+  background: radial-gradient(120% 90% at 50% -10%, #d2e0fb 0%, #8fb0ef 15%, #4f72d6 35%, #2c45a0 56%, #16245e 80%, #080d24 100%);
+  
+  /* Modern dynamic animated gradient */
+  background: radial-gradient(
+    var(--mountain-grad-radius-x) var(--mountain-grad-radius-y) at var(--mountain-grad-x) var(--mountain-grad-y),
+    var(--mountain-grad-color1) 0%,
+    var(--mountain-grad-color2) 15%,
+    var(--mountain-grad-color3) 35%,
+    var(--mountain-grad-color4) 56%,
+    var(--mountain-grad-color5) 80%,
+    #080d24 100%
+  );
+  animation: mountain-glow-pulse 24s ease-in-out infinite;
+}
+
+@keyframes mountain-glow-pulse {
+  0% {
+    --mountain-grad-x: 50%;
+    --mountain-grad-y: -10%;
+    --mountain-grad-radius-x: 120%;
+    --mountain-grad-radius-y: 90%;
+    --mountain-grad-color1: #d2e0fb;
+    --mountain-grad-color2: #8fb0ef;
+    --mountain-grad-color3: #4f72d6;
+    --mountain-grad-color4: #2c45a0;
+    --mountain-grad-color5: #16245e;
+  }
+  25% {
+    --mountain-grad-x: 58%;
+    --mountain-grad-y: -5%;
+    --mountain-grad-radius-x: 130%;
+    --mountain-grad-radius-y: 95%;
+    --mountain-grad-color1: #e6ebfd;
+    --mountain-grad-color2: #9bb7f5;
+    --mountain-grad-color3: #577ce8;
+    --mountain-grad-color4: #2e4bb2;
+    --mountain-grad-color5: #1b2a6b;
+  }
+  50% {
+    --mountain-grad-x: 42%;
+    --mountain-grad-y: -12%;
+    --mountain-grad-radius-x: 110%;
+    --mountain-grad-radius-y: 85%;
+    --mountain-grad-color1: #cbdcfc;
+    --mountain-grad-color2: #81a4eb;
+    --mountain-grad-color3: #4366ca;
+    --mountain-grad-color4: #253b8f;
+    --mountain-grad-color5: #111e52;
+  }
+  75% {
+    --mountain-grad-x: 48%;
+    --mountain-grad-y: -3%;
+    --mountain-grad-radius-x: 125%;
+    --mountain-grad-radius-y: 92%;
+    --mountain-grad-color1: #dae5fa;
+    --mountain-grad-color2: #99b6f2;
+    --mountain-grad-color3: #5275db;
+    --mountain-grad-color4: #2b47a6;
+    --mountain-grad-color5: #162561;
+  }
+  100% {
+    --mountain-grad-x: 50%;
+    --mountain-grad-y: -10%;
+    --mountain-grad-radius-x: 120%;
+    --mountain-grad-radius-y: 90%;
+    --mountain-grad-color1: #d2e0fb;
+    --mountain-grad-color2: #8fb0ef;
+    --mountain-grad-color3: #4f72d6;
+    --mountain-grad-color4: #2c45a0;
+    --mountain-grad-color5: #16245e;
+  }
+}
+
 .mountain-ridge {
   background:
     linear-gradient(180deg, rgba(8,13,36,0) 0%, rgba(8,13,36,0.4) 60%, rgba(8,13,36,0.9) 100%);
