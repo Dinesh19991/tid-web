@@ -28,8 +28,8 @@ export default function Header() {
           : 'border-b border-transparent'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between gap-4">
-        <div className="flex-1 flex justify-start">
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 h-16 flex lg:grid lg:grid-cols-3 items-center justify-between gap-4">
+        <div className="flex justify-start">
           <a href="/" className="flex items-center">
             <img
               src={tidLogo}
@@ -40,19 +40,21 @@ export default function Header() {
           </a>
         </div>
 
-        <nav className="hidden lg:flex items-center gap-7">
-          {NAV.map((n) => (
-            <a
-              key={n.label}
-              href={n.href}
-              className={`text-[13px] whitespace-nowrap transition-colors ${linkColor}`}
-            >
-              {n.label}
-            </a>
-          ))}
-        </nav>
+        <div className="hidden lg:flex justify-center">
+          <nav className="flex items-center gap-7">
+            {NAV.map((n) => (
+              <a
+                key={n.label}
+                href={n.href}
+                className={`text-[13px] whitespace-nowrap transition-colors ${linkColor}`}
+              >
+                {n.label}
+              </a>
+            ))}
+          </nav>
+        </div>
 
-        <div className="flex-1 flex items-center justify-end">
+        <div className="flex justify-end">
           <a
             href="/#get-tid"
             className="text-[13px] font-medium rounded-full px-4 py-2 transition bg-white text-[#0a0a0d] hover:bg-white/90"
