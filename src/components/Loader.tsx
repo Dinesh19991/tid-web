@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from '../lib/gsap';
-import logoMark from '../assets/assets/Logo_mark.png';
 import tidLogo from '../assets/assets/tid_logo.png';
 
 const WORDS = [
@@ -126,20 +125,6 @@ export default function Loader() {
       {/* centered brand + cycling status */}
       <div className="loader-fade absolute inset-0 flex flex-col items-center justify-center">
         <div className="loader-mark flex items-center gap-3 mb-6">
-          <span
-            className="block w-10 h-10"
-            style={{
-              WebkitMaskImage: `url(${logoMark})`,
-              maskImage: `url(${logoMark})`,
-              WebkitMaskSize: 'contain',
-              maskSize: 'contain',
-              WebkitMaskRepeat: 'no-repeat',
-              maskRepeat: 'no-repeat',
-              WebkitMaskPosition: 'center',
-              maskPosition: 'center',
-              backgroundColor: '#ffffff',
-            }}
-          />
           <img
             src={tidLogo}
             alt="tid"

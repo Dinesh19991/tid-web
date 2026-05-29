@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import logoMark from '../assets/assets/Logo_mark.png';
 import tidLogo from '../assets/assets/tid_logo.png';
 
 const COLUMNS = [
@@ -42,20 +41,6 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-12 gap-y-12 gap-x-8">
           <div className="col-span-2 md:col-span-4">
             <div className="flex items-center gap-2 mb-4">
-              <span
-                className="block w-6 h-6"
-                style={{
-                  WebkitMaskImage: `url(${logoMark})`,
-                  maskImage: `url(${logoMark})`,
-                  WebkitMaskSize: 'contain',
-                  maskSize: 'contain',
-                  WebkitMaskRepeat: 'no-repeat',
-                  maskRepeat: 'no-repeat',
-                  WebkitMaskPosition: 'center',
-                  maskPosition: 'center',
-                  backgroundColor: '#ffffff',
-                }}
-              />
               <img
                 src={tidLogo}
                 alt="tid"

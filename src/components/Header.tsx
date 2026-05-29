@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import logoMark from '../assets/assets/Logo_mark.png';
 import tidLogo from '../assets/assets/tid_logo.png';
 
 const NAV = [
@@ -30,7 +29,18 @@ export default function Header() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between gap-4">
-        <nav className="hidden lg:flex items-center gap-7 flex-1">
+        <div className="flex-1 flex justify-start">
+          <a href="/" className="flex items-center">
+            <img
+              src={tidLogo}
+              alt="tid"
+              className="h-[18px] w-auto"
+              draggable={false}
+            />
+          </a>
+        </div>
+
+        <nav className="hidden lg:flex items-center gap-7">
           {NAV.map((n) => (
             <a
               key={n.label}
@@ -42,41 +52,12 @@ export default function Header() {
           ))}
         </nav>
 
-        <a href="/" className="flex items-center gap-2 lg:flex-1 lg:justify-center">
-          <span
-            className="block w-6 h-6"
-            style={{
-              WebkitMaskImage: `url(${logoMark})`,
-              maskImage: `url(${logoMark})`,
-              WebkitMaskSize: 'contain',
-              maskSize: 'contain',
-              WebkitMaskRepeat: 'no-repeat',
-              maskRepeat: 'no-repeat',
-              WebkitMaskPosition: 'center',
-              maskPosition: 'center',
-              backgroundColor: '#ffffff',
-            }}
-          />
-          <img
-            src={tidLogo}
-            alt="tid"
-            className="h-[18px] w-auto"
-            draggable={false}
-          />
-        </a>
-
-        <div className="flex items-center gap-2.5 lg:flex-1 lg:justify-end">
-          <a
-            href="#"
-            className={`hidden sm:block text-[13px] transition-colors ${linkColor}`}
-          >
-            Sign in
-          </a>
+        <div className="flex-1 flex items-center justify-end">
           <a
             href="/#get-tid"
             className="text-[13px] font-medium rounded-full px-4 py-2 transition bg-white text-[#0a0a0d] hover:bg-white/90"
           >
-            Get tid
+            Download now
           </a>
         </div>
       </div>
