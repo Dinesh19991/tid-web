@@ -56,7 +56,7 @@ export default function Header() {
 
         <div className="flex justify-end">
           <a
-            href="/#get-tid"
+            href="/soon"
             className="text-[13px] font-medium rounded-full px-4 py-2 transition bg-white text-[#0a0a0d] hover:bg-white/90"
           >
             Download now
