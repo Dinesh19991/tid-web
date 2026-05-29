@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import tidLogo from '../assets/assets/tid_logo.png';
+import { submitEmail } from '../lib/waitlist';
 
 const COLUMNS = [
   {
@@ -34,6 +35,20 @@ const COLUMNS = [
 
 export default function Footer() {
   const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || busy) return;
+    setBusy(true);
+    const ok = await submitEmail(email, 'footer');
+    setBusy(false);
+    if (ok) {
+      setSubscribed(true);
+      setEmail('');
+    }
+  };
 
   return (
     <footer className="relative bg-[#0a0a0d] border-t border-white/[0.07] overflow-hidden">
@@ -51,21 +66,32 @@ export default function Footer() {
             <p className="text-white/50 text-[13px] leading-relaxed max-w-[15rem] mb-5">
               Your AI second brain — capture, organize, and recall every thought.
             </p>
-            <form
-              className="flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.04] pl-4 pr-1.5 py-1.5 max-w-[18rem]"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                className="flex-1 min-w-0 bg-transparent text-white placeholder-white/40 text-[13px] focus:outline-none"
-              />
-              <button className="bg-white text-[#0a0a0d] text-[12.5px] font-medium rounded-full px-4 py-2 hover:bg-white/90 transition shrink-0">
-                Subscribe
-              </button>
-            </form>
+            {subscribed ? (
+              <p className="text-white/70 text-[13px] max-w-[18rem]">
+                Thanks — you're subscribed. ✦
+              </p>
+            ) : (
+              <form
+                className="flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.04] pl-4 pr-1.5 py-1.5 max-w-[18rem]"
+                onSubmit={handleSubscribe}
+              >
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="flex-1 min-w-0 bg-transparent text-white placeholder-white/40 text-[13px] focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  disabled={busy}
+                  className="bg-white text-[#0a0a0d] text-[12.5px] font-medium rounded-full px-4 py-2 hover:bg-white/90 transition shrink-0 disabled:opacity-60"
+                >
+                  {busy ? '…' : 'Subscribe'}
+                </button>
+              </form>
+            )}
           </div>
 
           {COLUMNS.map((col, idx) => (

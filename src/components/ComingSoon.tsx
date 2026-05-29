@@ -1,10 +1,21 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import tidLogo from '../assets/assets/tid_logo.png';
+import { submitEmail } from '../lib/waitlist';
 
 export default function ComingSoon() {
   const [email, setEmail] = useState('');
   const [joined, setJoined] = useState(false);
+  const [busy, setBusy] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+
+  const handleJoin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || busy) return;
+    setBusy(true);
+    const ok = await submitEmail(email, 'coming-soon');
+    setBusy(false);
+    if (ok) setJoined(true);
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -116,10 +127,7 @@ export default function ComingSoon() {
             <>
               <form
                 className="flex items-center gap-2 rounded-full border border-white/12 bg-black/30 pl-4 pr-1.5 py-1.5"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  if (email.trim()) setJoined(true);
-                }}
+                onSubmit={handleJoin}
               >
                 <input
                   type="email"
@@ -131,9 +139,10 @@ export default function ComingSoon() {
                 />
                 <button
                   type="submit"
-                  className="bg-white text-[#070708] text-[13px] font-medium rounded-full px-5 py-2.5 transition hover:scale-[1.03] active:scale-95 flex-shrink-0"
+                  disabled={busy}
+                  className="bg-white text-[#070708] text-[13px] font-medium rounded-full px-5 py-2.5 transition hover:scale-[1.03] active:scale-95 flex-shrink-0 disabled:opacity-60"
                 >
-                  Join waitlist
+                  {busy ? 'Joining…' : 'Join waitlist'}
                 </button>
               </form>
               <p className="mt-3 text-[11.5px] text-white/35">
