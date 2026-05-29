@@ -1,36 +1,77 @@
-import { useEffect, useState } from 'react';
-
-const HERO_POSTER = '/videos/hero-poster.jpg';
-const HERO_WEBM = '/videos/hero.webm';
-const HERO_MP4 = '/videos/hero.mp4';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 
 export default function Hero() {
   const [mounted, setMounted] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const id = window.setTimeout(() => setMounted(true), 30);
     return () => clearTimeout(id);
   }, []);
 
-  return (
-    <section className="relative min-h-[100svh] w-full overflow-hidden mountain-bg">
-      {/* optional real footage layered over the gradient */}
-      <video
-        poster={HERO_POSTER}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        className="absolute inset-0 w-full h-full object-cover opacity-70"
-      >
-        <source src={HERO_WEBM} type="video/webm" />
-        <source src={HERO_MP4} type="video/mp4" />
-      </video>
+  // cursor-reactive glow + dot reveal
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const onMove = (e: MouseEvent) => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      el.style.setProperty('--my', `${e.clientY - r.top}px`);
+    };
+    el.addEventListener('mousemove', onMove);
+    return () => el.removeEventListener('mousemove', onMove);
+  }, []);
 
-      {/* legibility + ridge fade */}
-      <div className="absolute inset-0 mountain-ridge" />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a1335]/30 via-transparent to-[#0a0a0d]" />
+  return (
+    <section
+      ref={sectionRef}
+      className="relative min-h-[100svh] w-full overflow-hidden hero-aurora"
+      style={{ '--mx': '50%', '--my': '38%' } as CSSProperties}
+    >
+      {/* drifting blue light blobs */}
+      <div
+        className="hero-blob animate-blob-a"
+        style={{
+          width: 620,
+          height: 620,
+          top: '-12%',
+          left: '2%',
+          background:
+            'radial-gradient(circle, rgba(59,130,246,0.55), rgba(59,130,246,0) 70%)',
+        }}
+      />
+      <div
+        className="hero-blob animate-blob-b"
+        style={{
+          width: 540,
+          height: 540,
+          top: '14%',
+          right: '-4%',
+          background:
+            'radial-gradient(circle, rgba(99,102,241,0.5), rgba(99,102,241,0) 70%)',
+        }}
+      />
+      <div
+        className="hero-blob animate-blob-c"
+        style={{
+          width: 560,
+          height: 560,
+          bottom: '-16%',
+          left: '32%',
+          background:
+            'radial-gradient(circle, rgba(45,212,238,0.32), rgba(45,212,238,0) 70%)',
+        }}
+      />
+
+      {/* dot grid — dim everywhere */}
+      <div className="hero-dots absolute inset-0" />
+      {/* brighter blue dots revealed around the cursor */}
+      <div className="hero-dots-cursor absolute inset-0" />
+      {/* soft blue glow that follows the cursor */}
+      <div className="hero-cursor-glow absolute inset-0" />
+
+      {/* fade into the dark page */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-[#0a0a0d]" />
 
       <div
         className={`relative z-10 flex flex-col items-center text-center px-6 transition-all duration-1000 ${
@@ -49,16 +90,16 @@ export default function Hero() {
             margin: 0,
           }}
         >
-          Capture, organize & recall
+          Every idea, captured.
           <br />
-          your thinking, 24/7
+          Every note, found.
         </h1>
 
         <p className="mt-6 max-w-xl text-white/70 text-[15px] leading-relaxed">
-          tid is your AI second brain — it listens, structures, and surfaces
-          every thought the moment you need it, so nothing ever slips away.
+          tid is the AI note-taker that turns scattered thoughts — voice memos,
+          quick jots, links — into clean, organized notes you can recall in
+          plain words. No folders, no friction.
         </p>
-
       </div>
     </section>
   );

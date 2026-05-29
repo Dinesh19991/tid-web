@@ -28,135 +28,126 @@ body {
 }
 
 /* blue twilight atmosphere used by hero / cta / faq */
-@property --mountain-grad-x {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 50%;
-}
-
-@property --mountain-grad-y {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: -10%;
-}
-
-@property --mountain-grad-radius-x {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 120%;
-}
-
-@property --mountain-grad-radius-y {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 90%;
-}
-
-@property --mountain-grad-color1 {
-  syntax: '<color>';
-  inherits: false;
-  initial-value: #d2e0fb;
-}
-
-@property --mountain-grad-color2 {
-  syntax: '<color>';
-  inherits: false;
-  initial-value: #8fb0ef;
-}
-
-@property --mountain-grad-color3 {
-  syntax: '<color>';
-  inherits: false;
-  initial-value: #4f72d6;
-}
-
-@property --mountain-grad-color4 {
-  syntax: '<color>';
-  inherits: false;
-  initial-value: #2c45a0;
-}
-
-@property --mountain-grad-color5 {
-  syntax: '<color>';
-  inherits: false;
-  initial-value: #16245e;
-}
-
 .mountain-bg {
-  /* Fallback static gradient for legacy browsers */
-  background: radial-gradient(120% 90% at 50% -10%, #d2e0fb 0%, #8fb0ef 15%, #4f72d6 35%, #2c45a0 56%, #16245e 80%, #080d24 100%);
-  
-  /* Modern dynamic animated gradient */
-  background: radial-gradient(
-    var(--mountain-grad-radius-x) var(--mountain-grad-radius-y) at var(--mountain-grad-x) var(--mountain-grad-y),
-    var(--mountain-grad-color1) 0%,
-    var(--mountain-grad-color2) 15%,
-    var(--mountain-grad-color3) 35%,
-    var(--mountain-grad-color4) 56%,
-    var(--mountain-grad-color5) 80%,
-    #080d24 100%
-  );
-  animation: mountain-glow-pulse 24s ease-in-out infinite;
+  background:
+    radial-gradient(120% 90% at 50% -10%, #d2e0fb 0%, #8fb0ef 15%, #4f72d6 35%, #2c45a0 56%, #16245e 80%, #080d24 100%);
 }
 
-@keyframes mountain-glow-pulse {
+/* ── animated blue aurora gradient (hero) ────────────────────────── */
+.hero-aurora {
+  background: linear-gradient(135deg, #06060c 0%, #0b1230 28%, #142a6b 52%, #1d3f9c 72%, #0c1535 100%);
+  background-size: 220% 220%;
+  animation: hero-flow 22s ease-in-out infinite;
+}
+@keyframes hero-flow {
   0% {
-    --mountain-grad-x: 50%;
-    --mountain-grad-y: -10%;
-    --mountain-grad-radius-x: 120%;
-    --mountain-grad-radius-y: 90%;
-    --mountain-grad-color1: #d2e0fb;
-    --mountain-grad-color2: #8fb0ef;
-    --mountain-grad-color3: #4f72d6;
-    --mountain-grad-color4: #2c45a0;
-    --mountain-grad-color5: #16245e;
-  }
-  25% {
-    --mountain-grad-x: 58%;
-    --mountain-grad-y: -5%;
-    --mountain-grad-radius-x: 130%;
-    --mountain-grad-radius-y: 95%;
-    --mountain-grad-color1: #e6ebfd;
-    --mountain-grad-color2: #9bb7f5;
-    --mountain-grad-color3: #577ce8;
-    --mountain-grad-color4: #2e4bb2;
-    --mountain-grad-color5: #1b2a6b;
+    background-position: 0% 0%;
   }
   50% {
-    --mountain-grad-x: 42%;
-    --mountain-grad-y: -12%;
-    --mountain-grad-radius-x: 110%;
-    --mountain-grad-radius-y: 85%;
-    --mountain-grad-color1: #cbdcfc;
-    --mountain-grad-color2: #81a4eb;
-    --mountain-grad-color3: #4366ca;
-    --mountain-grad-color4: #253b8f;
-    --mountain-grad-color5: #111e52;
-  }
-  75% {
-    --mountain-grad-x: 48%;
-    --mountain-grad-y: -3%;
-    --mountain-grad-radius-x: 125%;
-    --mountain-grad-radius-y: 92%;
-    --mountain-grad-color1: #dae5fa;
-    --mountain-grad-color2: #99b6f2;
-    --mountain-grad-color3: #5275db;
-    --mountain-grad-color4: #2b47a6;
-    --mountain-grad-color5: #162561;
+    background-position: 100% 100%;
   }
   100% {
-    --mountain-grad-x: 50%;
-    --mountain-grad-y: -10%;
-    --mountain-grad-radius-x: 120%;
-    --mountain-grad-radius-y: 90%;
-    --mountain-grad-color1: #d2e0fb;
-    --mountain-grad-color2: #8fb0ef;
-    --mountain-grad-color3: #4f72d6;
-    --mountain-grad-color4: #2c45a0;
-    --mountain-grad-color5: #16245e;
+    background-position: 0% 0%;
   }
 }
 
+.hero-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  will-change: transform;
+  pointer-events: none;
+}
+@keyframes hero-blob-a {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(9%, 7%) scale(1.18);
+  }
+}
+@keyframes hero-blob-b {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1.05);
+  }
+  50% {
+    transform: translate(-11%, 5%) scale(0.92);
+  }
+}
+@keyframes hero-blob-c {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(7%, -9%) scale(1.22);
+  }
+}
+.animate-blob-a {
+  animation: hero-blob-a 17s ease-in-out infinite;
+}
+.animate-blob-b {
+  animation: hero-blob-b 21s ease-in-out infinite;
+}
+.animate-blob-c {
+  animation: hero-blob-c 25s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-aurora,
+  .animate-blob-a,
+  .animate-blob-b,
+  .animate-blob-c {
+    animation: none;
+  }
+}
+
+/* dot grid + cursor-reactive glow (reactbits-style) */
+.hero-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1.5px);
+  background-size: 26px 26px;
+  pointer-events: none;
+}
+.hero-dots-cursor {
+  background-image: radial-gradient(rgba(147, 197, 253, 0.9) 1px, transparent 1.5px);
+  background-size: 26px 26px;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(
+    circle 210px at var(--mx, 50%) var(--my, 40%),
+    #000 0%,
+    rgba(0, 0, 0, 0.45) 45%,
+    transparent 72%
+  );
+  mask-image: radial-gradient(
+    circle 210px at var(--mx, 50%) var(--my, 40%),
+    #000 0%,
+    rgba(0, 0, 0, 0.45) 45%,
+    transparent 72%
+  );
+}
+.hero-cursor-glow {
+  pointer-events: none;
+  background: radial-gradient(
+    circle 340px at var(--mx, 50%) var(--my, 40%),
+    rgba(59, 130, 246, 0.22),
+    rgba(99, 102, 241, 0.1) 35%,
+    transparent 62%
+  );
+  transition: background 0.15s ease-out;
+}
+
+/* coming-soon grid overlay (8 × 4 like the reference) */
+.cs-grid {
+  background-image: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 12.5% 25%;
+}
 .mountain-ridge {
   background:
     linear-gradient(180deg, rgba(8,13,36,0) 0%, rgba(8,13,36,0.4) 60%, rgba(8,13,36,0.9) 100%);

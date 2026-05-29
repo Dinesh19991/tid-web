@@ -17,6 +17,7 @@ import FAQ from './components/FAQ';
 import EndScene from './components/EndScene';
 import Footer from './components/Footer';
 import { Terms, Privacy, TrustCenter, About } from './components/LegalPages';
+import ComingSoon from './components/ComingSoon';
 
 function Home() {
   return (
@@ -107,6 +108,18 @@ export default function App() {
   }, [path]);
 
   const RouteComponent = ROUTES[path];
+
+  // Standalone full-screen pages (no marketing header/footer/loader)
+  if (path === '/soon') {
+    return (
+      <div
+        className="relative min-h-screen bg-[#070708] text-white [overflow-x:clip]"
+        style={{ fontFamily: "'Inter', sans-serif" }}
+      >
+        <ComingSoon />
+      </div>
+    );
+  }
 
   return (
     <div

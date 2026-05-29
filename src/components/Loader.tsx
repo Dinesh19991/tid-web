@@ -2,18 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { gsap } from '../lib/gsap';
 import tidLogo from '../assets/assets/tid_logo.png';
 
-const WORDS = [
-  'Capturing thoughts',
-  'Organizing notes',
-  'Connecting ideas',
-  'Surfacing memory',
-  'Almost ready',
-];
-
 export default function Loader() {
   const rootRef = useRef<HTMLDivElement>(null);
   const countRef = useRef<HTMLSpanElement>(null);
-  const wordRef = useRef<HTMLSpanElement>(null);
   const [done, setDone] = useState(false);
 
   useEffect(() => {
@@ -28,7 +19,6 @@ export default function Loader() {
 
     const ctx = gsap.context(() => {
       const counter = { v: 0 };
-      let lastIdx = -1;
       const tl = gsap.timeline({ onComplete: finish });
 
       tl.from('.loader-mark', {
@@ -39,14 +29,9 @@ export default function Loader() {
         ease: 'power3.out',
       })
         .from(
-          '.loader-status',
-          { opacity: 0, y: 12, duration: 0.5, ease: 'power2.out' },
-          '-=0.4',
-        )
-        .from(
           '.loader-count',
           { opacity: 0, y: 24, duration: 0.6, ease: 'power3.out' },
-          '-=0.5',
+          '-=0.4',
         )
         .to(
           '.loader-bar-fill',
@@ -62,19 +47,6 @@ export default function Loader() {
             onUpdate: () => {
               if (countRef.current)
                 countRef.current.textContent = String(Math.round(counter.v));
-              const idx = Math.min(
-                WORDS.length - 1,
-                Math.floor((counter.v / 100) * WORDS.length),
-              );
-              if (idx !== lastIdx && wordRef.current) {
-                lastIdx = idx;
-                wordRef.current.textContent = WORDS[idx];
-                gsap.fromTo(
-                  wordRef.current,
-                  { opacity: 0, y: 6 },
-                  { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' },
-                );
-              }
             },
           },
           '<',
@@ -122,19 +94,19 @@ export default function Loader() {
         ))}
       </div>
 
-      {/* centered brand + cycling status */}
+      {/* grid blocks background */}
+      <div className="loader-fade cs-grid absolute inset-0" />
+
+      {/* centered brand */}
       <div className="loader-fade absolute inset-0 flex flex-col items-center justify-center">
-        <div className="loader-mark flex items-center gap-3 mb-6">
+        <div className="loader-mark flex items-center gap-3">
           <img
             src={tidLogo}
             alt="tid"
-            className="h-7 w-auto"
+            className="h-8 w-auto"
             draggable={false}
           />
         </div>
-        <span className="loader-status text-[11.5px] tracking-[0.26em] uppercase text-white/50">
-          Capturing thoughts
-        </span>
       </div>
 
       {/* big percentage — bottom right */}
