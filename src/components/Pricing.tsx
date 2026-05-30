@@ -22,7 +22,7 @@ const TIERS = [
     name: 'Free',
     price: '$0',
     cadence: 'forever',
-    blurb: 'Everything you need to start a second brain.',
+    blurb: 'Everything you need to start taking smarter notes.',
     features: [
       'Up to 100 notes',
       'Daily voice capture',
@@ -36,7 +36,7 @@ const TIERS = [
     name: 'Pro',
     price: '$12',
     cadence: 'per month',
-    blurb: 'For people who think for a living.',
+    blurb: 'For people who take notes all day, every day.',
     features: [
       'Unlimited notes & voice',
       'AI summaries & specs',
@@ -51,7 +51,7 @@ const TIERS = [
     name: 'Team',
     price: '$20',
     cadence: 'per seat / mo',
-    blurb: 'A shared brain for the whole crew.',
+    blurb: 'A shared notebook for the whole team.',
     features: [
       'Everything in Pro',
       'Shared workspaces',

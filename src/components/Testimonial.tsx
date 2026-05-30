@@ -64,7 +64,7 @@ export default function Testimonial() {
               margin: 0,
             }}
           >
-            What fast-growing teams
+            What note-takers
             <br />
             say about tid
           </h2>

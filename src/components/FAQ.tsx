@@ -70,8 +70,8 @@ export default function FAQ() {
             questions
           </h2>
           <p className="mt-5 text-white/55 text-[14px] leading-relaxed max-w-sm">
-            Everything you might want to know before you start your second
-            brain. Still curious? Just ask.
+            Everything you might want to know before you start taking notes
+            with tid. Still curious? Just ask.
           </p>
         </div>
 

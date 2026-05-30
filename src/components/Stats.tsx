@@ -41,9 +41,9 @@ export default function Stats() {
               margin: 0,
             }}
           >
-            Clearer thinking. Better recall.
+            Faster notes. Better recall.
             <br />
-            Less friction.
+            Zero filing.
           </h2>
         </div>
 
@@ -76,10 +76,10 @@ export default function Stats() {
             </div>
             <div className="px-6 pb-6 pt-2 border-t border-white/[0.06]">
               <h3 className="text-white text-[16px] font-medium tracking-tight">
-                Capture that scales
+                Notes that write themselves
               </h3>
               <p className="text-white/50 text-[13px] leading-relaxed mt-2">
-                Speak or type freely — tid keeps up and tidies every fragment.
+                Speak or type freely — tid keeps up and turns every fragment into a clean note.
               </p>
             </div>
           </div>
@@ -125,16 +125,16 @@ export default function Stats() {
                   3×
                 </div>
                 <div className="text-white/45 text-[11px] tracking-[0.16em] uppercase mt-2">
-                  faster to find anything
+                  faster to find any note
                 </div>
               </div>
             </div>
             <div className="px-6 pb-6 pt-2 border-t border-white/[0.06]">
               <h3 className="text-white text-[16px] font-medium tracking-tight">
-                Faster thinking cycles
+                No more lost notes
               </h3>
               <p className="text-white/50 text-[13px] leading-relaxed mt-2">
-                Less time filing and searching, more time actually thinking.
+                Less time filing and searching. More time using what you wrote down.
               </p>
             </div>
           </div>

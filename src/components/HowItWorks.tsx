@@ -5,7 +5,7 @@ const TABS = [
   { n: '1', label: 'Capture', blurb: 'Speak, type, or paste — anything lands in one inbox.' },
   { n: '2', label: 'Organize', blurb: 'tid clusters by meaning into clean, linked notes.' },
   { n: '3', label: 'Recall', blurb: 'Ask in plain words and get the exact thought back.' },
-  { n: '4', label: 'Improve', blurb: 'Your second brain gets sharper with every capture.' },
+  { n: '4', label: 'Improve', blurb: 'Your notebook gets sharper with every note you take.' },
 ];
 
 const ROWS = [
@@ -56,7 +56,7 @@ export default function HowItWorks() {
               margin: 0,
             }}
           >
-            Get started in minutes, not months
+            Your first note in under a minute
           </h2>
         </div>
 

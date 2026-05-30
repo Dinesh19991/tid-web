@@ -28,7 +28,7 @@ export default function Marquee() {
   return (
     <section className="relative bg-[#0a0a0d] py-16 md:py-20 overflow-hidden">
       <p className="text-center text-[10.5px] tracking-[0.32em] uppercase text-white/35 font-medium mb-9">
-        Trusted by teams who think for a living
+        Loved by people who take a lot of notes
       </p>
       <div className="pointer-events-none absolute inset-y-0 left-0 w-40 z-10 bg-gradient-to-r from-[#0a0a0d] to-transparent" />
       <div className="pointer-events-none absolute inset-y-0 right-0 w-40 z-10 bg-gradient-to-l from-[#0a0a0d] to-transparent" />

@@ -66,7 +66,7 @@ export default function Scenes() {
           >
             Built for how you
             <br />
-            actually think
+            actually take notes
           </h2>
         </div>
 

@@ -95,7 +95,7 @@ export default function Loader() {
       </div>
 
       {/* grid blocks background */}
-      <div className="loader-fade cs-grid absolute inset-0" />
+      <div className="loader-fade cs-grid absolute inset-0 opacity-30" />
 
       {/* centered brand */}
       <div className="loader-fade absolute inset-0 flex flex-col items-center justify-center">

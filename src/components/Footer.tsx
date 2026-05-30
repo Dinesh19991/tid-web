@@ -64,7 +64,7 @@ export default function Footer() {
               />
             </div>
             <p className="text-white/50 text-[13px] leading-relaxed max-w-[15rem] mb-5">
-              Your AI second brain — capture, organize, and recall every thought.
+              The AI notebook that jots, organizes, and finds every note for you.
             </p>
             {subscribed ? (
               <p className="text-white/70 text-[13px] max-w-[18rem]">
@@ -131,7 +131,7 @@ export default function Footer() {
       <div className="border-t border-white/[0.07]">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-6 flex flex-col sm:flex-row justify-between gap-2 text-white/40 text-[12px]">
           <span>© 2026 tid. All rights reserved.</span>
-          <span>Your AI second brain, 24/7</span>
+          <span>The AI notebook that thinks with you</span>
         </div>
       </div>
     </footer>

@@ -49,11 +49,11 @@ const POINTS = [
   {
     Icon: Export,
     title: 'Export anytime',
-    body: 'Markdown, JSON, or PDF. Leave whenever you like — your second brain belongs entirely to you.',
+    body: 'Markdown, JSON, or PDF. Leave whenever you like — every note belongs entirely to you.',
   },
   {
     Icon: Offline,
-    title: 'Capture on-device',
+    title: 'Take notes offline',
     body: 'Jot offline and sync when you’re ready. No connection required to get a thought down.',
   },
 ];
@@ -98,12 +98,12 @@ export default function Showcase() {
               margin: 0,
             }}
           >
-            Your second brain
+            Your notes
             <br />
-            stays yours
+            stay yours
           </h2>
           <p className="mt-5 text-white/55 text-[14.5px] leading-relaxed max-w-md">
-            tid is private by design. Everything you capture is yours alone —
+            tid is private by design. Every note you take is yours alone —
             encrypted, never sold, and always portable.
           </p>
         </div>

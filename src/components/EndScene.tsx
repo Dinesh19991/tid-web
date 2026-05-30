@@ -44,11 +44,11 @@ export default function EndScene() {
             margin: 0,
           }}
         >
-          Ready to think clearer?
+          Ready to take smarter notes?
         </h2>
         <p className="mt-5 text-white/65 text-[15px] leading-relaxed max-w-md mx-auto">
-          Join thousands of thinkers capturing, organizing, and recalling
-          everything with tid.
+          Join thousands of note-takers capturing, organizing, and finding
+          every thought with tid.
         </p>
         <div className="mt-9 flex justify-center">
           <StoreBadges center />

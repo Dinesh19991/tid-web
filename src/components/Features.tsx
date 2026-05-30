@@ -3,20 +3,20 @@ import { gsap } from '../lib/gsap';
 
 const STEPS = [
   {
-    title: 'Understands what you mean',
-    body: 'tid reads the intent behind every note — not just the words — so it files things the way you actually think.',
+    title: 'Writes the note for you',
+    body: 'Speak, type, or paste — tid turns half-formed thoughts into clean, structured notes you would have written yourself.',
   },
   {
-    title: 'Surfaces what matters',
-    body: 'The right note appears the moment it is relevant, pulled by meaning instead of folders or exact keywords.',
+    title: 'Files itself by meaning',
+    body: 'No folders, no tags. tid groups related notes by what they are about, so everything stays in the right place automatically.',
   },
   {
-    title: 'Moves your thinking forward',
-    body: 'Summaries, action items, and connections are drafted for you, turning raw capture into a usable plan.',
+    title: 'Finds what you forgot',
+    body: 'Ask in plain words and tid pulls up the exact note — even when you have lost the title and only remember the vibe.',
   },
   {
-    title: 'Builds shared understanding',
-    body: 'Share a workspace and everyone works from the same living context — no more re-explaining yourself.',
+    title: 'Turns notes into next steps',
+    body: 'Summaries, action items, and follow-ups are drafted for you, so a messy capture becomes something you can act on.',
   },
 ];
 
@@ -61,9 +61,9 @@ export default function Features() {
               margin: 0,
             }}
           >
-            How tid runs your
+            How tid takes notes
             <br />
-            second brain, 24/7
+            for you, 24/7
           </h2>
         </div>
 
