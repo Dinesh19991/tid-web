@@ -78,24 +78,10 @@ export default function Features() {
                   onMouseEnter={() => setActive(i)}
                   onFocus={() => setActive(i)}
                   onClick={() => setActive(i)}
-                  className={`how-step group relative text-left border-b border-white/[0.08] overflow-hidden transition-[padding,background-color] duration-500 ease-out ${
-                    isActive ? 'py-7 bg-white/[0.025]' : 'py-5 bg-transparent'
+                  className={`how-step group relative text-left border-b border-white/[0.08] overflow-hidden transition-[padding] duration-500 ease-out ${
+                    isActive ? 'py-7' : 'py-5'
                   }`}
                 >
-                  {/* soft glow that blooms from the left edge when active */}
-                  <span
-                    aria-hidden
-                    className={`pointer-events-none absolute inset-y-0 left-0 transition-all duration-500 ease-out ${
-                      isActive
-                        ? 'w-1/2 opacity-100'
-                        : 'w-0 opacity-0'
-                    }`}
-                    style={{
-                      background:
-                        'linear-gradient(90deg, rgba(157,184,245,0.10), rgba(157,184,245,0) 80%)',
-                    }}
-                  />
-
                   {/* left accent bar that lights up for the active item */}
                   <span
                     aria-hidden
