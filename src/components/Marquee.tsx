@@ -11,11 +11,11 @@ const TOOLS = [
 
 function Row() {
   return (
-    <div className="flex w-max items-center gap-14 animate-marquee">
+    <div className="flex w-max items-center animate-marquee hover:[animation-play-state:paused]">
       {[...TOOLS, ...TOOLS].map((t, i) => (
         <span
           key={`${t}-${i}`}
-          className="shrink-0 text-white/35 text-[17px] tracking-tight font-medium whitespace-nowrap"
+          className="shrink-0 pr-14 text-white/35 hover:text-white text-[17px] tracking-tight font-medium whitespace-nowrap transition-colors duration-300 cursor-default"
         >
           {t}
         </span>

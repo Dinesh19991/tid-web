@@ -65,8 +65,11 @@ export default function Hero() {
 
       {/* dot grid — dim everywhere */}
       <div className="hero-dots absolute inset-0" />
-      {/* brighter blue dots revealed around the cursor */}
+      {/* brighter blue dots revealed in a softly breathing circle */}
       <div className="hero-dots-cursor absolute inset-0" />
+      {/* continuous ripple rings emanating from the cursor */}
+      <div className="hero-dots-wave absolute inset-0" />
+      <div className="hero-dots-wave-2 absolute inset-0" />
       {/* soft blue glow that follows the cursor */}
       <div className="hero-cursor-glow absolute inset-0" />
 

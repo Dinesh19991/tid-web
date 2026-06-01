@@ -110,23 +110,88 @@ body {
   background-size: 26px 26px;
   pointer-events: none;
 }
+
+/* Animatable CSS custom properties so the mask radius can be tweened
+   smoothly via @keyframes (would otherwise be a string swap). */
+@property --reveal-r {
+  syntax: '<length>';
+  initial-value: 210px;
+  inherits: false;
+}
+@property --wave-r {
+  syntax: '<length>';
+  initial-value: 0px;
+  inherits: false;
+}
+
+/* Bright dots inside a soft circle that follows the cursor — the circle now
+   gently breathes so it never feels frozen. */
 .hero-dots-cursor {
   background-image: radial-gradient(rgba(147, 197, 253, 0.9) 1px, transparent 1.5px);
   background-size: 26px 26px;
   pointer-events: none;
   -webkit-mask-image: radial-gradient(
-    circle 210px at var(--mx, 50%) var(--my, 40%),
+    circle var(--reveal-r) at var(--mx, 50%) var(--my, 40%),
     #000 0%,
     rgba(0, 0, 0, 0.45) 45%,
     transparent 72%
   );
   mask-image: radial-gradient(
-    circle 210px at var(--mx, 50%) var(--my, 40%),
+    circle var(--reveal-r) at var(--mx, 50%) var(--my, 40%),
     #000 0%,
     rgba(0, 0, 0, 0.45) 45%,
     transparent 72%
   );
+  animation: hero-breathe 4.4s ease-in-out infinite;
 }
+@keyframes hero-breathe {
+  0%, 100% { --reveal-r: 190px; }
+  50%      { --reveal-r: 260px; }
+}
+
+/* Continuous ripple — a thin ring of bright dots expanding outward
+   from the cursor, like a pebble dropped in still water. */
+.hero-dots-wave,
+.hero-dots-wave-2 {
+  background-image: radial-gradient(rgba(165, 200, 255, 0.85) 1px, transparent 1.5px);
+  background-size: 26px 26px;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(
+    circle calc(var(--wave-r) + 80px) at var(--mx, 50%) var(--my, 40%),
+    transparent calc(var(--wave-r) - 40px),
+    rgba(0, 0, 0, 0.95) var(--wave-r),
+    transparent calc(var(--wave-r) + 40px)
+  );
+  mask-image: radial-gradient(
+    circle calc(var(--wave-r) + 80px) at var(--mx, 50%) var(--my, 40%),
+    transparent calc(var(--wave-r) - 40px),
+    rgba(0, 0, 0, 0.95) var(--wave-r),
+    transparent calc(var(--wave-r) + 40px)
+  );
+  opacity: 0;
+}
+.hero-dots-wave {
+  animation: hero-wave 3.6s ease-out infinite;
+}
+/* Second ring offset by half a cycle so ripples feel continuous. */
+.hero-dots-wave-2 {
+  animation: hero-wave 3.6s ease-out infinite;
+  animation-delay: 1.8s;
+}
+@keyframes hero-wave {
+  0% {
+    --wave-r: 40px;
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.85;
+  }
+  100% {
+    --wave-r: 520px;
+    opacity: 0;
+  }
+}
+
 .hero-cursor-glow {
   pointer-events: none;
   background: radial-gradient(
@@ -136,6 +201,18 @@ body {
     transparent 62%
   );
   transition: background 0.15s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-dots-cursor,
+  .hero-dots-wave,
+  .hero-dots-wave-2 {
+    animation: none;
+  }
+  .hero-dots-wave,
+  .hero-dots-wave-2 {
+    display: none;
+  }
 }
 
 /* coming-soon grid overlay (8 × 4 like the reference) */
