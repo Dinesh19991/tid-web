@@ -75,6 +75,8 @@ export default function Features() {
               return (
                 <button
                   key={s.title}
+                  onMouseEnter={() => setActive(i)}
+                  onFocus={() => setActive(i)}
                   onClick={() => setActive(i)}
                   className="how-step group relative text-left py-5 border-b border-white/[0.08]"
                 >
