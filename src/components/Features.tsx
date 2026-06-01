@@ -78,39 +78,70 @@ export default function Features() {
                   onMouseEnter={() => setActive(i)}
                   onFocus={() => setActive(i)}
                   onClick={() => setActive(i)}
-                  className="how-step group relative text-left py-5 border-b border-white/[0.08]"
+                  className={`how-step group relative text-left border-b border-white/[0.08] overflow-hidden transition-[padding,background-color] duration-500 ease-out ${
+                    isActive ? 'py-7 bg-white/[0.025]' : 'py-5 bg-transparent'
+                  }`}
                 >
+                  {/* soft glow that blooms from the left edge when active */}
+                  <span
+                    aria-hidden
+                    className={`pointer-events-none absolute inset-y-0 left-0 transition-all duration-500 ease-out ${
+                      isActive
+                        ? 'w-1/2 opacity-100'
+                        : 'w-0 opacity-0'
+                    }`}
+                    style={{
+                      background:
+                        'linear-gradient(90deg, rgba(157,184,245,0.10), rgba(157,184,245,0) 80%)',
+                    }}
+                  />
+
                   {/* left accent bar that lights up for the active item */}
                   <span
                     aria-hidden
-                    className={`absolute left-0 top-1/2 -translate-y-1/2 w-[2px] rounded-full transition-all duration-300 ${
+                    className={`absolute left-0 top-1/2 -translate-y-1/2 w-[2px] rounded-full transition-all duration-500 ease-out ${
                       isActive
-                        ? 'h-8 bg-[#9db8f5] opacity-100'
+                        ? 'h-10 bg-[#9db8f5] opacity-100 shadow-[0_0_18px_rgba(157,184,245,0.6)]'
                         : 'h-4 bg-white/20 opacity-0 group-hover:opacity-60'
                     }`}
                   />
-                  <div className="flex items-baseline gap-4 pl-4">
+
+                  <div
+                    className={`relative flex items-baseline gap-4 transition-[padding-left] duration-500 ease-out ${
+                      isActive ? 'pl-7' : 'pl-4'
+                    }`}
+                  >
                     <span
-                      className={`text-[12px] tabular-nums font-medium transition-colors duration-300 ${
-                        isActive ? 'text-[#9db8f5]' : 'text-white/35 group-hover:text-white/60'
+                      className={`tabular-nums font-medium transition-[color,font-size] duration-500 ease-out ${
+                        isActive
+                          ? 'text-[13px] text-[#9db8f5]'
+                          : 'text-[12px] text-white/35 group-hover:text-white/60'
                       }`}
                     >
                       0{i + 1}
                     </span>
                     <div className="flex-1">
                       <h3
-                        className={`text-[18px] font-medium tracking-tight transition-colors duration-300 ${
-                          isActive ? 'text-white' : 'text-white/45 group-hover:text-white/75'
+                        className={`font-medium tracking-tight transition-[color,font-size,letter-spacing] duration-500 ease-out ${
+                          isActive
+                            ? 'text-[21px] text-white -tracking-[0.02em]'
+                            : 'text-[18px] text-white/45 group-hover:text-white/75'
                         }`}
                       >
                         {s.title}
                       </h3>
                       <div
-                        className="grid transition-[grid-template-rows] duration-300"
+                        className="grid transition-[grid-template-rows] duration-500 ease-out"
                         style={{ gridTemplateRows: isActive ? '1fr' : '0fr' }}
                       >
                         <div className="overflow-hidden">
-                          <p className="pt-2 text-white/55 text-[14px] leading-relaxed max-w-md">
+                          <p
+                            className={`pt-2.5 text-white/65 text-[14px] leading-relaxed max-w-md transition-[opacity,transform] duration-500 ease-out ${
+                              isActive
+                                ? 'opacity-100 translate-y-0'
+                                : 'opacity-0 -translate-y-1'
+                            }`}
+                          >
                             {s.body}
                           </p>
                         </div>
