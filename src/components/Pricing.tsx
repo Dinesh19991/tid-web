@@ -17,13 +17,15 @@ function Check() {
   );
 }
 
+function Dash() {
+  return <span className="text-white/25">—</span>;
+}
+
 type Tier = {
   name: 'Free' | 'Pro' | 'Max';
   monthly: number;
-  yearly: number; // effective per-month when billed yearly
+  yearly: number;
   blurb: string;
-  // Features in display order — anchor benefit first.
-  // Each line is something the app actually does today.
   features: string[];
   cta: string;
   featured: boolean;
@@ -31,9 +33,6 @@ type Tier = {
 
 const TIERS: Tier[] = [
   {
-    // Acquisition. Tight ceilings on everything that costs us Gemini $$:
-    // voice minutes, photo extracts, AI edit requests. Cheap features
-    // (notes, reminders, todos, basic search) run free to drive habit.
     name: 'Free',
     monthly: 0,
     yearly: 0,
@@ -51,10 +50,6 @@ const TIERS: Tier[] = [
     featured: false,
   },
   {
-    // Core monetization. Removes anxiety caps for daily users but keeps
-    // the truly heavy stuff (PDF batches, unlimited voice, big rooms)
-    // for Max. PDF extraction has a 300s function timeout — costliest
-    // call — so a monthly cap protects margin here.
     name: 'Pro',
     monthly: 12,
     yearly: 9,
@@ -74,10 +69,6 @@ const TIERS: Tier[] = [
     featured: true,
   },
   {
-    // High-ARPU. Captures cost-overrun power users (unlimited voice/PDF)
-    // and small teams. Larger rooms = team revenue without changing the
-    // app's per-user billing model. Priority queue is a real lever — we
-    // can route Max users to a higher-quota Cloud Functions region.
     name: 'Max',
     monthly: 24,
     yearly: 18,
@@ -98,9 +89,149 @@ const TIERS: Tier[] = [
   },
 ];
 
+// Detailed comparison matrix below the cards. Cells can be a string
+// (printed as-is) or boolean (rendered as ✓ / —). Grouped into sections
+// so the eye can scan one category at a time.
+type Cell = string | boolean;
+type Row = { label: string; hint?: string; cells: [Cell, Cell, Cell] };
+type Group = { title: string; rows: Row[] };
+
+const MATRIX: Group[] = [
+  {
+    title: 'Capture',
+    rows: [
+      { label: 'Notes stored', cells: ['50', 'Unlimited', 'Unlimited'] },
+      {
+        label: 'Voice transcription',
+        hint: 'Recorded audio turned into text by Mr. Tid.',
+        cells: ['10 min / mo', '5 hrs / mo', 'Unlimited'],
+      },
+      {
+        label: 'Photo-to-note',
+        hint: 'Snap a whiteboard or screenshot — tid extracts the content.',
+        cells: ['5 / mo', 'Unlimited', 'Unlimited'],
+      },
+      {
+        label: 'PDF text extraction',
+        hint: 'Upload a PDF and get a clean, searchable note back.',
+        cells: [false, '20 / mo', 'Unlimited'],
+      },
+      { label: 'Devices', cells: ['2', 'Unlimited', 'Unlimited'] },
+    ],
+  },
+  {
+    title: 'Intelligence',
+    rows: [
+      {
+        label: 'Mr. Tid AI editor',
+        hint: 'Improve, fix, simplify, summarize, translate — any note.',
+        cells: ['5 / day', 'Unlimited', 'Unlimited'],
+      },
+      {
+        label: 'Auto-summaries & task extraction',
+        hint: 'Every saved note gets a summary and a checklist.',
+        cells: [false, true, true],
+      },
+      {
+        label: 'Semantic search',
+        hint: 'Find notes by meaning, not exact words.',
+        cells: [true, true, true],
+      },
+      {
+        label: 'Daily brief',
+        hint: 'Morning summary of your todos, reminders, and priorities.',
+        cells: [false, true, 'Health-aware'],
+      },
+      {
+        label: 'Meeting briefs & action items',
+        hint: 'Room notes turn into a brief with owner-assigned tasks.',
+        cells: [false, false, true],
+      },
+      {
+        label: 'Priority AI processing',
+        hint: 'Faster response times on every Mr. Tid call.',
+        cells: [false, false, true],
+      },
+    ],
+  },
+  {
+    title: 'Sharing & teams',
+    rows: [
+      {
+        label: 'Personal rooms',
+        hint: 'A space to keep a project, a class, or a topic.',
+        cells: ['1', '3', 'Unlimited'],
+      },
+      {
+        label: 'Members per room',
+        cells: ['Solo', 'Up to 5', 'Up to 25'],
+      },
+      { label: 'Role-based room permissions', cells: [false, false, true] },
+    ],
+  },
+  {
+    title: 'Privacy & ownership',
+    rows: [
+      { label: 'End-to-end encrypted', cells: [true, true, true] },
+      { label: 'Offline capture', cells: [true, true, true] },
+      {
+        label: 'Export your data',
+        cells: ['Markdown', 'Markdown + PDF', 'Markdown + PDF + JSON'],
+      },
+      { label: 'Never used to train AI', cells: [true, true, true] },
+    ],
+  },
+  {
+    title: 'Support',
+    rows: [
+      { label: 'Community help', cells: [true, true, true] },
+      { label: 'Email support', cells: [false, true, true] },
+      { label: 'Priority response (under 24h)', cells: [false, false, true] },
+    ],
+  },
+];
+
+const FAQ_QA = [
+  {
+    q: 'What counts as a Mr. Tid AI request?',
+    a: 'Anything you ask Mr. Tid to do to your note — improve, fix, summarize, translate, continue, change tone. Voice transcription, photo capture, and auto-summaries on save have their own quotas and don\'t count against this.',
+  },
+  {
+    q: 'Can I cancel anytime?',
+    a: 'Yes. Cancel from the app in two taps. Pro and Max keep working through the end of your billing cycle, then drop to Free. Your notes are always yours.',
+  },
+  {
+    q: 'Do team members on Pro need their own subscription?',
+    a: 'No. Pro rooms invite up to 5 people total — collaborators don\'t need to be paying users. Max rooms invite up to 25. If you need bigger teams or want everyone on Pro features, Enterprise is the right fit.',
+  },
+  {
+    q: 'What happens if I hit a monthly limit?',
+    a: 'You\'ll see a clear notice in the app. Voice and PDF caps reset on the 1st of each month. The Mr. Tid daily cap on Free resets at midnight in your timezone.',
+  },
+  {
+    q: 'Is there a free trial for Pro?',
+    a: 'Yes — 7 days, no card required at signup. You\'ll get a reminder before it ends, and you\'ll drop to Free if you don\'t upgrade.',
+  },
+];
+
+function MatrixCell({ value }: { value: Cell }) {
+  if (typeof value === 'boolean') {
+    return value ? (
+      <span className="inline-flex text-[#9db8f5]">
+        <Check />
+      </span>
+    ) : (
+      <Dash />
+    );
+  }
+  return <span className="text-white/85 text-[13px]">{value}</span>;
+}
+
 export default function Pricing() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly');
+  const [showCompare, setShowCompare] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number>(0);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -121,7 +252,6 @@ export default function Pricing() {
     return () => ctx.revert();
   }, []);
 
-  // Savings % anchored to Pro (the headline tier).
   const proSavings = Math.round((1 - TIERS[1].yearly / TIERS[1].monthly) * 100);
 
   return (
@@ -133,21 +263,31 @@ export default function Pricing() {
       <div className="relative max-w-6xl mx-auto">
         {/* heading + billing toggle */}
         <div className="price-head mb-14 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
-          <h2
-            className="max-w-xl"
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: 300,
-              fontSize: 'clamp(28px, 3.8vw, 46px)',
-              lineHeight: 1.08,
-              letterSpacing: '-0.025em',
-              margin: 0,
-            }}
-          >
-            Start free.
-            <br />
-            Upgrade when it clicks.
-          </h2>
+          <div className="max-w-xl">
+            <span className="text-[10.5px] tracking-[0.32em] uppercase text-[#9db8f5]/80 font-medium">
+              Pricing
+            </span>
+            <h2
+              className="mt-3"
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 300,
+                fontSize: 'clamp(28px, 3.8vw, 46px)',
+                lineHeight: 1.08,
+                letterSpacing: '-0.025em',
+                margin: 0,
+              }}
+            >
+              Start free.
+              <br />
+              Upgrade when it clicks.
+            </h2>
+            <p className="mt-5 text-white/55 text-[14px] leading-relaxed max-w-md">
+              One quiet plan per type of thinker. Caps are written here, not
+              hidden in fine print — so you always know what you&apos;re paying
+              for.
+            </p>
+          </div>
 
           <div
             role="tablist"
@@ -260,9 +400,7 @@ export default function Pricing() {
           })}
         </div>
 
-        {/* enterprise row — SSO + audit logs are the only features the app
-            would need a real refactor to ship, which is exactly why they
-            belong in an enterprise contract, not a self-serve tier. */}
+        {/* enterprise row */}
         <div className="price-enterprise mt-6 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
           <div className="flex-1">
             <div className="flex items-center gap-3">
@@ -287,9 +425,160 @@ export default function Pricing() {
           </a>
         </div>
 
-        {/* trust line — privacy positioning lives across every page, never
-            paywalled. */}
-        <p className="mt-8 text-center text-white/40 text-[12.5px]">
+        {/* compare-all toggle + full matrix */}
+        <div className="mt-16">
+          <div className="flex items-end justify-between gap-6 mb-6">
+            <div>
+              <h3 className="text-white text-[20px] font-medium tracking-tight">
+                Compare plans in detail
+              </h3>
+              <p className="mt-1 text-white/50 text-[13px] leading-relaxed">
+                Every limit, every feature — side by side.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowCompare((v) => !v)}
+              className="shrink-0 text-[12.5px] font-medium text-white/70 hover:text-white border-b border-white/20 hover:border-white/60 transition-colors pb-0.5"
+            >
+              {showCompare ? 'Hide details' : 'Show full comparison'}
+            </button>
+          </div>
+
+          <div
+            className="grid transition-[grid-template-rows,opacity] duration-500 ease-out"
+            style={{
+              gridTemplateRows: showCompare ? '1fr' : '0fr',
+              opacity: showCompare ? 1 : 0,
+            }}
+            aria-hidden={!showCompare}
+          >
+            <div className="overflow-hidden">
+              <div className="rounded-2xl border border-white/[0.07] bg-[#101115] overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div className="min-w-[640px]">
+                  {/* header row */}
+                  <div className="grid grid-cols-[1.6fr_repeat(3,1fr)] border-b border-white/[0.07] bg-white/[0.02]">
+                    <div className="px-5 py-3.5 text-[11px] tracking-[0.16em] uppercase text-white/40 font-medium">
+                      Feature
+                    </div>
+                    {(['Free', 'Pro', 'Max'] as const).map((n, i) => (
+                      <div
+                        key={n}
+                        className={`px-3 py-3.5 text-center text-[13px] font-medium ${
+                          i === 1 ? 'text-white bg-[#5670d8]/8' : 'text-white/75'
+                        }`}
+                      >
+                        {n}
+                        {i === 1 && (
+                          <span className="ml-1.5 text-[9px] tracking-[0.16em] uppercase text-[#aebcf2]">
+                            ★
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {MATRIX.map((group) => (
+                    <div key={group.title}>
+                      <div className="grid grid-cols-[1.6fr_repeat(3,1fr)] border-b border-white/[0.05] bg-white/[0.015]">
+                        <div className="px-5 py-2.5 text-[10.5px] tracking-[0.2em] uppercase text-[#9db8f5]/80 font-medium">
+                          {group.title}
+                        </div>
+                        <div />
+                        <div />
+                        <div />
+                      </div>
+                      {group.rows.map((row) => (
+                        <div
+                          key={row.label}
+                          className="grid grid-cols-[1.6fr_repeat(3,1fr)] items-center border-b border-white/[0.04] last:border-b-0"
+                        >
+                          <div className="px-5 py-3.5">
+                            <div className="text-white/85 text-[13px]">
+                              {row.label}
+                            </div>
+                            {row.hint && (
+                              <div className="mt-1 text-white/40 text-[11.5px] leading-snug max-w-[28ch]">
+                                {row.hint}
+                              </div>
+                            )}
+                          </div>
+                          {row.cells.map((c, i) => (
+                            <div
+                              key={i}
+                              className={`px-3 py-3.5 text-center ${
+                                i === 1 ? 'bg-[#5670d8]/[0.05]' : ''
+                              }`}
+                            >
+                              <MatrixCell value={c} />
+                            </div>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* mini FAQ — the questions every pricing page user actually has */}
+        <div className="mt-16">
+          <h3 className="text-white text-[20px] font-medium tracking-tight">
+            Pricing questions, answered
+          </h3>
+          <p className="mt-1 text-white/50 text-[13px] leading-relaxed">
+            The fine print, in plain words.
+          </p>
+
+          <div className="mt-6 rounded-2xl border border-white/[0.07] bg-[#101115] divide-y divide-white/[0.05]">
+            {FAQ_QA.map((item, i) => {
+              const isOpen = openFaq === i;
+              return (
+                <div key={item.q}>
+                  <button
+                    onClick={() => setOpenFaq(isOpen ? -1 : i)}
+                    className="w-full flex items-center justify-between gap-5 text-left px-6 py-5 hover:bg-white/[0.02] transition-colors"
+                  >
+                    <span className="text-white/90 text-[14px] font-medium tracking-tight">
+                      {item.q}
+                    </span>
+                    <span
+                      className={`shrink-0 text-white/45 transition-transform duration-300 ${
+                        isOpen ? 'rotate-45' : 'rotate-0'
+                      }`}
+                      aria-hidden
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="16"
+                        height="16"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                      >
+                        <path d="M12 5v14M5 12h14" />
+                      </svg>
+                    </span>
+                  </button>
+                  <div
+                    className="grid transition-[grid-template-rows] duration-300 ease-out"
+                    style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
+                  >
+                    <div className="overflow-hidden">
+                      <p className="px-6 pb-5 -mt-1 text-white/60 text-[13.5px] leading-relaxed max-w-3xl">
+                        {item.a}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* trust line */}
+        <p className="mt-10 text-center text-white/40 text-[12.5px]">
           Every plan includes end-to-end encryption, offline capture, and full
           data export.
         </p>
