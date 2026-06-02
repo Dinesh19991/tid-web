@@ -9,18 +9,24 @@ const TOOLS = [
   'Readwise',
 ];
 
-function Row() {
+// One row of the loop. Trailing pr-14 carries the same spacing
+// past the last item, so when this row sits next to a duplicate
+// of itself the seam is invisible.
+function Row({ ariaHidden = false }: { ariaHidden?: boolean }) {
   return (
-    <div className="flex w-max items-center animate-marquee hover:[animation-play-state:paused]">
-      {[...TOOLS, ...TOOLS].map((t, i) => (
-        <span
-          key={`${t}-${i}`}
-          className="shrink-0 pr-14 text-white/35 hover:text-white text-[17px] tracking-tight font-medium whitespace-nowrap transition-colors duration-300 cursor-default"
+    <ul
+      aria-hidden={ariaHidden}
+      className="flex shrink-0 items-center gap-14 pr-14 list-none m-0 p-0"
+    >
+      {TOOLS.map((t) => (
+        <li
+          key={t}
+          className="shrink-0 text-white/35 hover:text-white text-[17px] tracking-tight font-medium whitespace-nowrap transition-colors duration-300 cursor-default"
         >
           {t}
-        </span>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
 
@@ -32,7 +38,15 @@ export default function Marquee() {
       </p>
       <div className="pointer-events-none absolute inset-y-0 left-0 w-40 z-10 bg-gradient-to-r from-[#0a0a0d] to-transparent" />
       <div className="pointer-events-none absolute inset-y-0 right-0 w-40 z-10 bg-gradient-to-l from-[#0a0a0d] to-transparent" />
-      <Row />
+
+      {/* Two identical rows, side by side. The animation translates the
+          flex container by exactly -50% of its width — which equals one
+          full Row. The duplicate slides into the original's slot, looking
+          identical, so there is no visible jump or gap. */}
+      <div className="flex w-max animate-marquee">
+        <Row />
+        <Row ariaHidden />
+      </div>
     </section>
   );
 }
