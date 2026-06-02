@@ -39,12 +39,18 @@ export default function Marquee() {
       <div className="pointer-events-none absolute inset-y-0 left-0 w-40 z-10 bg-gradient-to-r from-[#0a0a0d] to-transparent" />
       <div className="pointer-events-none absolute inset-y-0 right-0 w-40 z-10 bg-gradient-to-l from-[#0a0a0d] to-transparent" />
 
-      {/* Two identical rows, side by side. The animation translates the
-          flex container by exactly -50% of its width — which equals one
-          full Row. The duplicate slides into the original's slot, looking
-          identical, so there is no visible jump or gap. */}
+      {/* Four identical rows, side by side. The animation translates the
+          flex container by -50% of its width — which equals exactly 2 full
+          Rows. Because every row is pixel-identical, the visible content
+          at the end matches the start, so the loop is seamless.
+
+          Rendering 4 copies (not 2) guarantees the container stays wider
+          than the viewport even on ultrawide screens — no empty space can
+          appear at the trailing edge during the animation. */}
       <div className="flex w-max animate-marquee">
         <Row />
+        <Row ariaHidden />
+        <Row ariaHidden />
         <Row ariaHidden />
       </div>
     </section>
