@@ -17,20 +17,6 @@ function Check() {
   );
 }
 
-function Spark() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="12"
-      height="12"
-      fill="currentColor"
-      className="shrink-0"
-    >
-      <path d="M12 2l1.6 6.4L20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6L12 2z" />
-    </svg>
-  );
-}
-
 type Feature = { label: string; highlight?: boolean };
 
 type Tier = {
@@ -42,7 +28,6 @@ type Tier = {
   yearly: number;
   cta: string;
   featured: boolean;
-  model: string;
   sections: { title: string; items: Feature[] }[];
 };
 
@@ -56,7 +41,6 @@ const TIERS: Tier[] = [
     yearly: 0,
     cta: 'Start free',
     featured: false,
-    model: 'Gemini Flash',
     sections: [
       {
         title: 'Capture',
@@ -86,7 +70,6 @@ const TIERS: Tier[] = [
     yearly: 10,
     cta: 'Start 7-day free trial',
     featured: true,
-    model: 'Gemini 2.5 Pro',
     sections: [
       {
         title: 'Capture',
@@ -125,7 +108,6 @@ const TIERS: Tier[] = [
     yearly: 20,
     cta: 'Get Max',
     featured: false,
-    model: 'Gemini 2.5 Pro · Deep Think',
     sections: [
       {
         title: 'Everything in Pro, plus',
@@ -277,10 +259,17 @@ export default function Pricing() {
                 {/* header: name + badge */}
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h3 className="text-white text-[15px] font-medium tracking-tight">
+                    <h3
+                      className="text-white font-medium"
+                      style={{
+                        fontSize: '26px',
+                        letterSpacing: '-0.025em',
+                        lineHeight: 1.05,
+                      }}
+                    >
                       {tier.name}
                     </h3>
-                    <p className="mt-1 text-white/45 text-[12px] leading-relaxed">
+                    <p className="mt-2 text-white/45 text-[12.5px] leading-relaxed">
                       {tier.persona}
                     </p>
                   </div>
@@ -370,22 +359,6 @@ export default function Pricing() {
                   ))}
                 </div>
 
-                {/* powered by */}
-                <div className="mt-7 pt-5 border-t border-white/[0.05]">
-                  <div className="flex items-center gap-2 text-[11.5px] text-white/45">
-                    <span
-                      className={
-                        tier.featured ? 'text-[#aebcf2]' : 'text-[#9db8f5]/80'
-                      }
-                    >
-                      <Spark />
-                    </span>
-                    Powered by{' '}
-                    <span className="text-white/70 font-medium">
-                      {tier.model}
-                    </span>
-                  </div>
-                </div>
               </div>
             );
           })}
