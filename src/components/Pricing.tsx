@@ -20,8 +20,10 @@ function Check() {
 type Tier = {
   name: 'Free' | 'Pro' | 'Max';
   monthly: number;
-  yearly: number;
+  yearly: number; // effective per-month when billed yearly
   blurb: string;
+  // Features in display order — anchor benefit first.
+  // Each line is something the app actually does today.
   features: string[];
   cta: string;
   featured: boolean;
@@ -29,47 +31,66 @@ type Tier = {
 
 const TIERS: Tier[] = [
   {
+    // Acquisition. Tight ceilings on everything that costs us Gemini $$:
+    // voice minutes, photo extracts, AI edit requests. Cheap features
+    // (notes, reminders, todos, basic search) run free to drive habit.
     name: 'Free',
     monthly: 0,
     yearly: 0,
-    blurb: 'Everything you need to start taking smarter notes.',
+    blurb: 'Try the magic — capture notes by voice, text, or photo.',
     features: [
-      '100 notes',
-      '30 min of voice / month',
-      'AI summaries & action items',
-      'Semantic search',
+      '50 notes',
+      '10 min of voice transcription / month',
+      '5 Mr. Tid AI requests / day',
+      '5 photo-to-note extractions / month',
+      'Reminders, todos & focus timer',
+      '1 personal room',
       '2 devices',
     ],
     cta: 'Get started',
     featured: false,
   },
   {
+    // Core monetization. Removes anxiety caps for daily users but keeps
+    // the truly heavy stuff (PDF batches, unlimited voice, big rooms)
+    // for Max. PDF extraction has a 300s function timeout — costliest
+    // call — so a monthly cap protects margin here.
     name: 'Pro',
     monthly: 12,
-    yearly: 10,
+    yearly: 9,
     blurb: 'For people who take notes all day, every day.',
     features: [
       'Unlimited notes',
-      '10 hours of voice / month',
-      'Auto-organize & auto-link',
-      'Chat with your notes',
-      'Personal knowledge graph',
+      '5 hours of voice transcription / month',
+      'Unlimited Mr. Tid AI editing',
+      'Unlimited photo-to-note',
+      '20 PDF text extractions / month',
+      'Auto-summaries & task extraction',
+      'Daily brief from your todos & reminders',
+      '3 shared rooms (up to 5 members each)',
       'Unlimited devices',
     ],
-    cta: 'Start free trial',
+    cta: 'Start 7-day free trial',
     featured: true,
   },
   {
+    // High-ARPU. Captures cost-overrun power users (unlimited voice/PDF)
+    // and small teams. Larger rooms = team revenue without changing the
+    // app's per-user billing model. Priority queue is a real lever — we
+    // can route Max users to a higher-quota Cloud Functions region.
     name: 'Max',
     monthly: 24,
-    yearly: 20,
-    blurb: 'Deeper reasoning, AI agents, and a notebook for your whole team.',
+    yearly: 18,
+    blurb: 'For power note-takers and growing teams.',
     features: [
       'Everything in Pro',
       'Unlimited voice transcription',
-      'AI agents — research, draft, plan',
-      'Long-context reasoning',
-      'Shared workspaces',
+      'Unlimited PDF text extractions',
+      'Unlimited shared rooms (up to 25 members each)',
+      'Auto-generated meeting briefs & action items',
+      'Health-aware daily brief',
+      'Priority AI processing',
+      'Export to Markdown, PDF & JSON',
       'Priority support',
     ],
     cta: 'Get Max',
@@ -83,7 +104,7 @@ export default function Pricing() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from('.price-head, .price-card', {
+      gsap.from('.price-head, .price-card, .price-enterprise', {
         opacity: 0,
         y: 32,
         duration: 0.85,
@@ -100,6 +121,9 @@ export default function Pricing() {
     return () => ctx.revert();
   }, []);
 
+  // Savings % anchored to Pro (the headline tier).
+  const proSavings = Math.round((1 - TIERS[1].yearly / TIERS[1].monthly) * 100);
+
   return (
     <section
       id="pricing"
@@ -107,6 +131,7 @@ export default function Pricing() {
       className="relative bg-[#0a0a0d] py-24 md:py-32 px-6 sm:px-8 lg:px-12 border-t border-white/[0.06]"
     >
       <div className="relative max-w-6xl mx-auto">
+        {/* heading + billing toggle */}
         <div className="price-head mb-14 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
           <h2
             className="max-w-xl"
@@ -124,7 +149,6 @@ export default function Pricing() {
             Upgrade when it clicks.
           </h2>
 
-          {/* billing toggle */}
           <div
             role="tablist"
             aria-label="Billing period"
@@ -142,12 +166,13 @@ export default function Pricing() {
                     : 'text-white/55 hover:text-white/80'
                 }`}
               >
-                {p === 'monthly' ? 'Monthly' : 'Yearly'}
+                {p === 'monthly' ? 'Monthly' : `Yearly · save ${proSavings}%`}
               </button>
             ))}
           </div>
         </div>
 
+        {/* tier grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
           {TIERS.map((tier) => {
             const price = billing === 'monthly' ? tier.monthly : tier.yearly;
@@ -234,6 +259,40 @@ export default function Pricing() {
             );
           })}
         </div>
+
+        {/* enterprise row — SSO + audit logs are the only features the app
+            would need a real refactor to ship, which is exactly why they
+            belong in an enterprise contract, not a self-serve tier. */}
+        <div className="price-enterprise mt-6 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+          <div className="flex-1">
+            <div className="flex items-center gap-3">
+              <h3 className="text-white text-[16px] font-medium tracking-tight">
+                Enterprise
+              </h3>
+              <span className="text-[9.5px] tracking-[0.18em] uppercase text-white/55 bg-white/[0.05] border border-white/15 rounded-full px-2.5 py-1 font-medium">
+                Custom
+              </span>
+            </div>
+            <p className="mt-2 text-white/55 text-[13px] leading-relaxed max-w-2xl">
+              For teams who need SSO, audit logs, custom AI quotas, a signed
+              DPA, or a dedicated success manager. We tailor a plan to how
+              your team actually thinks.
+            </p>
+          </div>
+          <a
+            href="mailto:hello@trytid.com?subject=tid%20Enterprise"
+            className="shrink-0 rounded-full px-5 py-2.5 text-[13.5px] font-medium border border-white/15 text-white/90 hover:bg-white/[0.05] hover:border-white/30 transition self-start sm:self-auto"
+          >
+            Talk to sales →
+          </a>
+        </div>
+
+        {/* trust line — privacy positioning lives across every page, never
+            paywalled. */}
+        <p className="mt-8 text-center text-white/40 text-[12.5px]">
+          Every plan includes end-to-end encryption, offline capture, and full
+          data export.
+        </p>
       </div>
     </section>
   );
