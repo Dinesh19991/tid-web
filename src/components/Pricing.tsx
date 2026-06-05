@@ -36,12 +36,11 @@ const TIERS: Tier[] = [
     name: 'Free',
     monthly: 0,
     yearly: 0,
-    blurb: 'Try the magic — capture notes by voice, text, or photo.',
+    blurb: 'Try the magic — capture notes by voice or text.',
     features: [
       '50 notes',
-      '10 min of voice transcription / month',
+      '10 voice notes / month',
       '5 Mr. Tid AI requests / day',
-      '5 photo-to-note extractions / month',
       'Reminders, todos & focus timer',
       '1 personal room',
       '2 devices',
@@ -56,9 +55,8 @@ const TIERS: Tier[] = [
     blurb: 'For people who take notes all day, every day.',
     features: [
       'Unlimited notes',
-      '5 hours of voice transcription / month',
+      '300 voice notes / month',
       'Unlimited Mr. Tid AI editing',
-      'Unlimited photo-to-note',
       '20 PDF text extractions / month',
       'Auto-summaries & task extraction',
       'Daily brief from your todos & reminders',
@@ -75,7 +73,7 @@ const TIERS: Tier[] = [
     blurb: 'For power note-takers and growing teams.',
     features: [
       'Everything in Pro',
-      'Unlimited voice transcription',
+      'Unlimited voice notes',
       'Unlimited PDF text extractions',
       'Unlimited shared rooms (up to 25 members each)',
       'Auto-generated meeting briefs & action items',
@@ -102,14 +100,9 @@ const MATRIX: Group[] = [
     rows: [
       { label: 'Notes stored', cells: ['50', 'Unlimited', 'Unlimited'] },
       {
-        label: 'Voice transcription',
-        hint: 'Recorded audio turned into text by Mr. Tid.',
-        cells: ['10 min / mo', '5 hrs / mo', 'Unlimited'],
-      },
-      {
-        label: 'Photo-to-note',
-        hint: 'Snap a whiteboard or screenshot — tid extracts the content.',
-        cells: ['5 / mo', 'Unlimited', 'Unlimited'],
+        label: 'Voice notes',
+        hint: 'Record a thought — Mr. Tid transcribes it into a clean note.',
+        cells: ['10 / mo', '300 / mo', 'Unlimited'],
       },
       {
         label: 'PDF text extraction',
