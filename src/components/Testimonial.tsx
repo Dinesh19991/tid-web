@@ -74,7 +74,7 @@ export default function Testimonial() {
           {QUOTES.map((q) => (
             <div
               key={q.name}
-              className="t-card rounded-2xl bg-[#141519] border border-white/[0.07] p-8 flex flex-col justify-between min-h-[260px]"
+              className="t-card card-blur rounded-2xl border border-white/[0.07] p-8 flex flex-col justify-between min-h-[260px]"
             >
               <p className="text-white/85 text-[15px] leading-relaxed">
                 &ldquo;{q.quote}&rdquo;

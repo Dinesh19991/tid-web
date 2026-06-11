@@ -49,7 +49,7 @@ export default function Stats() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* card 1 — capture velocity */}
-          <div className="o-card rounded-2xl bg-[#141519] border border-white/[0.07] overflow-hidden flex flex-col">
+          <div className="o-card card-blur rounded-2xl border border-white/[0.07] overflow-hidden flex flex-col">
             <div className="p-6 h-44 relative">
               <div className="text-[9.5px] tracking-[0.2em] uppercase text-white/30 mb-3">
                 Captures this week
@@ -85,7 +85,7 @@ export default function Stats() {
           </div>
 
           {/* card 2 — informed recall */}
-          <div className="o-card rounded-2xl bg-[#141519] border border-white/[0.07] overflow-hidden flex flex-col">
+          <div className="o-card card-blur rounded-2xl border border-white/[0.07] overflow-hidden flex flex-col">
             <div className="p-6 h-44 flex flex-col justify-center gap-2.5">
               {['Where did I note the pricing idea?', 'Found · 3 linked notes', 'Summarized in 180ms'].map(
                 (t, i) => (
@@ -110,7 +110,7 @@ export default function Stats() {
           </div>
 
           {/* card 3 — faster */}
-          <div className="o-card rounded-2xl bg-[#141519] border border-white/[0.07] overflow-hidden flex flex-col">
+          <div className="o-card card-blur rounded-2xl border border-white/[0.07] overflow-hidden flex flex-col">
             <div className="p-6 h-44 flex items-center justify-center">
               <div className="text-center">
                 <div

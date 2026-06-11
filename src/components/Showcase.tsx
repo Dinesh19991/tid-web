@@ -112,7 +112,7 @@ export default function Showcase() {
           {POINTS.map(({ Icon, title, body }) => (
             <div
               key={title}
-              className="sec-card rounded-2xl bg-[#141519] border border-white/[0.07] p-7 hover:border-white/20 transition-colors"
+              className="sec-card card-blur rounded-2xl border border-white/[0.07] p-7 transition-colors"
             >
               <div className="w-10 h-10 rounded-xl bg-white/[0.05] border border-white/10 grid place-items-center text-white/70 mb-5">
                 <Icon />

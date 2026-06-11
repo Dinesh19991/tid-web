@@ -322,7 +322,7 @@ export default function Pricing() {
                 className={`price-card relative rounded-2xl p-8 flex flex-col border transition-colors ${
                   tier.featured
                     ? 'bg-gradient-to-b from-[#1b2150] to-[#101119] border-[#5670d8]/40 shadow-[0_40px_90px_-40px_rgba(86,112,216,0.5)]'
-                    : 'bg-[#141519] border-white/[0.07] hover:border-white/15'
+                    : 'card-blur border-white/[0.07]'
                 }`}
               >
                 {tier.featured && (

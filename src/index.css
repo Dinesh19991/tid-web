@@ -215,6 +215,112 @@ body {
   }
 }
 
+/* ──────────────────────────────────────────────────────────────
+   Brand-blue gradient card. Rich vibrant blue at rest with two
+   overlapping glow orbs, a deep navy vignette toward the bottom,
+   and a soft grain texture overlay. On hover an extra bright
+   drifting blue blob fades in and slowly orbits the card.
+   ────────────────────────────────────────────────────────────── */
+@property --cb-gx {
+  syntax: '<percentage>';
+  initial-value: 30%;
+  inherits: false;
+}
+@property --cb-gy {
+  syntax: '<percentage>';
+  initial-value: 10%;
+  inherits: false;
+}
+
+.card-blur {
+  position: relative;
+  isolation: isolate;
+  background:
+    /* Top-right vibrant blue orb */
+    radial-gradient(55% 55% at 78% 12%, rgba(110, 135, 240, 0.32), transparent 65%),
+    /* Top-left softer indigo orb */
+    radial-gradient(65% 60% at 18% 22%, rgba(80, 105, 215, 0.24), transparent 70%),
+    /* Bottom vignette — fades to deep navy/black */
+    radial-gradient(130% 80% at 50% 112%, rgba(4, 6, 18, 0.72), transparent 65%),
+    /* Rich base */
+    linear-gradient(160deg, #1a1f44 0%, #0d1130 55%, #07091a 100%);
+  transition:
+    border-color 0.55s ease,
+    box-shadow 0.6s ease,
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Drifting brighter blue blob — fades in only on hover and slowly
+   orbits between corners to keep the card feeling alive. */
+.card-blur::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: -2;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--cb-gx) var(--cb-gy),
+    rgba(180, 205, 255, 0.5),
+    rgba(110, 135, 240, 0.22) 28%,
+    transparent 62%
+  );
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+/* Subtle grain — gives the gradient that printed/poster texture. */
+.card-blur::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 160px 160px;
+}
+
+.card-blur:hover {
+  border-color: rgba(165, 185, 250, 0.45) !important;
+  box-shadow:
+    0 30px 80px -28px rgba(86, 112, 216, 0.55),
+    0 0 0 1px rgba(157, 184, 245, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transform: translateY(-3px);
+}
+
+.card-blur:hover::before {
+  opacity: 1;
+  animation: card-blur-drift 8s ease-in-out infinite;
+}
+
+@keyframes card-blur-drift {
+  0%, 100% {
+    --cb-gx: 22%;
+    --cb-gy: 8%;
+  }
+  33% {
+    --cb-gx: 82%;
+    --cb-gy: 22%;
+  }
+  66% {
+    --cb-gx: 48%;
+    --cb-gy: 58%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-blur:hover {
+    transform: none;
+  }
+  .card-blur:hover::before {
+    animation: none;
+  }
+}
+
 /* coming-soon grid overlay (8 × 4 like the reference) */
 .cs-grid {
   background-image: linear-gradient(

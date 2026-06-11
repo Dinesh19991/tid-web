@@ -67,7 +67,7 @@ export default function UseCases() {
           {CASES.map((c) => (
             <div
               key={c.title}
-              className="uc-card rounded-2xl bg-[#141519] border border-white/[0.07] p-7 hover:border-white/20 transition-all"
+              className="uc-card card-blur rounded-2xl border border-white/[0.07] p-7 transition-all"
             >
               <span className="text-[10.5px] tracking-[0.18em] uppercase text-white/40 font-medium">
                 {c.tag}
