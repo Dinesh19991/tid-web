@@ -24,7 +24,7 @@ const COLUMNS = [
   },
 ];
 
-export default function Footer() {
+export default function Footer({ transparent = false }: { transparent?: boolean }) {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -42,7 +42,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative bg-[#0a0a0d] border-t border-white/[0.07] overflow-hidden">
+    <footer className={`relative ${transparent ? 'bg-transparent' : 'bg-[#0a0a0d] border-t border-white/[0.07]'} overflow-hidden`}>
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-16 pb-10">
         <div className="grid grid-cols-2 md:grid-cols-12 gap-y-12 gap-x-8">
           <div className="col-span-2 md:col-span-4">
@@ -86,7 +86,7 @@ export default function Footer() {
           </div>
 
           {COLUMNS.map((col, idx) => (
-            <div key={col.title} className={idx === 0 ? 'md:col-start-8 md:col-span-2' : 'md:col-span-2'}>
+            <div key={col.title} className={idx === 0 ? 'md:col-start-9 md:col-span-2 text-right' : 'md:col-span-2 text-right'}>
               <h4 className="text-white text-[12.5px] font-medium mb-5 tracking-tight">
                 {col.title}
               </h4>

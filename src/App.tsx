@@ -34,7 +34,11 @@ function Home() {
       <Scenes />
       <Pricing />
       <FAQ />
-      <EndScene />
+      <div className="relative mountain-bg overflow-hidden">
+        <div className="absolute inset-0 mountain-ridge pointer-events-none" />
+        <EndScene />
+        <Footer transparent />
+      </div>
     </>
   );
 }
@@ -128,8 +132,14 @@ export default function App() {
     >
       <Loader />
       <Header />
-      {RouteComponent ? <RouteComponent /> : <Home />}
-      <Footer />
+      {RouteComponent ? (
+        <>
+          <RouteComponent />
+          <Footer />
+        </>
+      ) : (
+        <Home />
+      )}
     </div>
   );
 }

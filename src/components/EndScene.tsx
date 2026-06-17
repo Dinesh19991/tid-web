@@ -28,10 +28,8 @@ export default function EndScene() {
     <section
       id="get-tid"
       ref={sectionRef}
-      className="relative mountain-bg py-28 md:py-40 px-6 sm:px-8 lg:px-12 overflow-hidden"
+      className="relative py-28 md:py-40 px-6 sm:px-8 lg:px-12 overflow-hidden"
     >
-      <div className="absolute inset-0 mountain-ridge" />
-
       <div className="cta-inner relative z-10 max-w-2xl mx-auto text-center">
         <h2
           className="text-white"
