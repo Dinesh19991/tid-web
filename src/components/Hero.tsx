@@ -99,8 +99,8 @@ export default function Hero() {
         </h1>
 
         <p className="mt-6 max-w-xl text-white/70 text-[15px] leading-relaxed">
-          tid is the AI note-taker that turns scattered thoughts — voice memos,
-          quick jots, links — into clean, organized notes you can recall in
+          tid is the AI note-taker that turns scattered thoughts voice memos,
+          quick jots, links into clean, organized notes you can recall in
           plain words. No folders, no friction.
         </p>
       </div>
