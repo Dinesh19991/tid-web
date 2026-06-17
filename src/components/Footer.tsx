@@ -14,15 +14,6 @@ const COLUMNS = [
     ],
   },
   {
-    title: 'Resources',
-    links: [
-      { label: 'Documentation', href: '#' },
-      { label: 'Changelog', href: '#' },
-      { label: 'Templates', href: '#' },
-      { label: 'Status', href: '#' },
-    ],
-  },
-  {
     title: 'Company',
     links: [
       { label: 'About', href: '/about' },
@@ -95,7 +86,7 @@ export default function Footer() {
           </div>
 
           {COLUMNS.map((col, idx) => (
-            <div key={col.title} className={idx === 0 ? 'md:col-start-6 md:col-span-2' : 'md:col-span-2'}>
+            <div key={col.title} className={idx === 0 ? 'md:col-start-8 md:col-span-2' : 'md:col-span-2'}>
               <h4 className="text-white text-[12.5px] font-medium mb-5 tracking-tight">
                 {col.title}
               </h4>
@@ -128,7 +119,7 @@ export default function Footer() {
         />
       </div>
 
-      <div className="border-t border-white/[0.07]">
+      <div>
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-6 flex flex-col sm:flex-row justify-between gap-2 text-white/40 text-[12px]">
           <span>© 2026 tid. All rights reserved.</span>
           <span>The AI notebook that thinks with you</span>
