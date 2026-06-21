@@ -25,7 +25,7 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[100svh] w-full overflow-hidden hero-aurora"
+      className="relative min-h-[100svh] w-full flex flex-col items-center justify-center overflow-hidden hero-aurora"
       style={{ '--mx': '50%', '--my': '38%' } as CSSProperties}
     >
       {/* drifting blue light blobs */}
@@ -80,14 +80,13 @@ export default function Hero() {
         className={`relative z-10 flex flex-col items-center text-center px-6 transition-all duration-1000 ${
           mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
         }`}
-        style={{ paddingTop: 'clamp(160px, 24vh, 260px)' }}
       >
         <h1
           className="text-white"
           style={{
             fontFamily: "'Inter', sans-serif",
             fontWeight: 300,
-            fontSize: 'clamp(38px, 5.6vw, 76px)',
+            fontSize: 'clamp(44px, 7vw, 100px)',
             lineHeight: 1.04,
             letterSpacing: '-0.03em',
             margin: 0,
@@ -98,7 +97,7 @@ export default function Hero() {
           Every note, found.
         </h1>
 
-        <p className="mt-6 max-w-xl text-white/70 text-[15px] leading-relaxed">
+        <p className="mt-8 max-w-2xl text-white/70 text-[18px] md:text-[22px] leading-relaxed">
           tid is the AI note-taker that turns scattered thoughts voice memos,
           quick jots, links into clean, organized notes you can recall in
           plain words. No folders, no friction.
