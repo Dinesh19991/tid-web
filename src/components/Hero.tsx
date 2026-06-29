@@ -25,7 +25,7 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[100svh] w-full flex flex-col items-center justify-center overflow-hidden hero-aurora"
+      className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center overflow-hidden hero-aurora"
       style={{ '--mx': '50%', '--my': '38%' } as CSSProperties}
     >
       {/* drifting blue light blobs */}

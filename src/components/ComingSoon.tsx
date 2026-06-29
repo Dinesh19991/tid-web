@@ -37,7 +37,7 @@ export default function ComingSoon() {
   return (
     <div
       ref={rootRef}
-      className="relative min-h-screen w-full overflow-hidden bg-[#070708] text-white"
+      className="relative min-h-[100dvh] w-full overflow-hidden bg-[#070708] text-white"
       style={{ '--cx': '75%', '--cy': '30%' } as CSSProperties}
     >
       {/* grid */}
@@ -83,7 +83,7 @@ export default function ComingSoon() {
       </p>
 
       {/* foreground content */}
-      <div className="relative z-20 min-h-screen flex flex-col items-center justify-center px-6 text-center">
+      <div className="relative z-20 min-h-[100dvh] flex flex-col items-center justify-center px-6 text-center">
         <img
           src={tidLogo}
           alt="tid"

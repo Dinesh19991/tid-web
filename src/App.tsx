@@ -117,7 +117,7 @@ export default function App() {
   if (path === '/soon') {
     return (
       <div
-        className="relative min-h-screen bg-[#070708] text-white [overflow-x:clip]"
+        className="relative min-h-[100dvh] bg-[#070708] text-white [overflow-x:clip]"
         style={{ fontFamily: "'Inter', sans-serif" }}
       >
         <ComingSoon />
@@ -127,7 +127,7 @@ export default function App() {
 
   return (
     <div
-      className="relative min-h-screen bg-[#0a0a0d] text-white [overflow-x:clip]"
+      className="relative min-h-[100dvh] bg-[#0a0a0d] text-white [overflow-x:clip]"
       style={{ fontFamily: "'Inter', sans-serif" }}
     >
       <Loader />

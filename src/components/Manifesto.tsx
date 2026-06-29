@@ -58,7 +58,7 @@ export default function Manifesto() {
       className="relative bg-[#0a0a0d]"
       style={{ height: '210vh' }}
     >
-      <div className="sticky top-0 h-screen flex items-center px-6 sm:px-8 lg:px-12 overflow-hidden">
+      <div className="sticky top-0 h-[100dvh] flex items-center px-6 sm:px-8 lg:px-12 overflow-hidden">
         <div className="max-w-3xl mx-auto w-full space-y-7">
           {PARAGRAPHS.map((para, pi) => (
             <p

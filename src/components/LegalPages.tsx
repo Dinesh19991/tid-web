@@ -19,7 +19,7 @@ function PageShell({
   }, []);
 
   return (
-    <main className="relative bg-[#0a0a0d] min-h-screen pt-32 md:pt-40 pb-28 px-6 sm:px-8 lg:px-12 overflow-hidden">
+    <main className="relative bg-[#0a0a0d] min-h-[100dvh] pt-32 md:pt-40 pb-28 px-6 sm:px-8 lg:px-12 overflow-hidden">
       {/* soft blue glow at the top, echoing the hero */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-[#16245e]/45 via-[#101a3e]/15 to-transparent" />
 
