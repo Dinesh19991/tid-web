@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.tid.app",
+      "sha256_cert_fingerprints": [
+        "BC:1B:2D:A9:34:9B:A8:95:2C:16:5A:38:04:95:87:80:2F:69:07:29:EE:BA:E0:94:23:4E:0A:25:F9:EE:60:20"
+      ]
+    }
+  }
+]
