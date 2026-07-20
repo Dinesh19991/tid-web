@@ -16,5 +16,9 @@
     }
   ],
   "cleanUrls": false,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/r/:path*", "destination": "/index.html" },
+    { "source": "/n/:path*", "destination": "/index.html" }
+  ]
 }
