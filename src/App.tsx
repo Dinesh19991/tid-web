@@ -1,4 +1,4 @@
-import { useEffect, useState, type ComponentType } from 'react';
+import { useEffect, useState, type ComponentType, type ReactNode } from 'react';
 import { ScrollTrigger } from './lib/gsap';
 import Loader from './components/Loader';
 import Header from './components/Header';
@@ -18,6 +18,10 @@ import EndScene from './components/EndScene';
 import Footer from './components/Footer';
 import { Terms, Privacy, TrustCenter, About } from './components/LegalPages';
 import ComingSoon from './components/ComingSoon';
+import RoomLanding from './components/link/RoomLanding';
+import RoomInviteLanding from './components/link/RoomInviteLanding';
+import NoteLanding from './components/link/NoteLanding';
+import OpenAppLanding from './components/link/OpenAppLanding';
 
 function Home() {
   return (
@@ -49,6 +53,40 @@ const ROUTES: Record<string, ComponentType> = {
   '/trust': TrustCenter,
   '/about': About,
 };
+
+/**
+ * Match a pathname against the deep-link patterns.
+ *
+ * Returns a ReactNode (the rendered landing page) when the path is a
+ * deep-link URL, or null when it should fall through to the SPA's own
+ * routing (Home, Legal pages, etc.).
+ *
+ * These are standalone landing surfaces — they render without the
+ * marketing Header/Footer/Loader chrome, same pattern as `/soon`.
+ */
+function matchDeepLink(pathname: string): ReactNode | null {
+  // /r/{roomId}/join → invite acceptance
+  const inviteMatch = pathname.match(/^\/r\/([^/]+)\/join\/?$/);
+  if (inviteMatch) return <RoomInviteLanding roomId={inviteMatch[1]} />;
+
+  // /r/{roomId}/n/{messageId} → same landing as room (Phase 2 renders the
+  // room preview; the app deep-link handles scroll-to-message).
+  const roomMsgMatch = pathname.match(/^\/r\/([^/]+)\/n\/([^/]+)\/?$/);
+  if (roomMsgMatch) return <RoomLanding roomId={roomMsgMatch[1]} />;
+
+  // /r/{roomId}
+  const roomMatch = pathname.match(/^\/r\/([^/]+)\/?$/);
+  if (roomMatch) return <RoomLanding roomId={roomMatch[1]} />;
+
+  // /n/{noteId}
+  const noteMatch = pathname.match(/^\/n\/([^/]+)\/?$/);
+  if (noteMatch) return <NoteLanding noteId={noteMatch[1]} />;
+
+  // /open, /get → universal opener
+  if (pathname === '/open' || pathname === '/get') return <OpenAppLanding />;
+
+  return null;
+}
 
 export default function App() {
   const [path, setPath] = useState(
@@ -112,6 +150,7 @@ export default function App() {
   }, [path]);
 
   const RouteComponent = ROUTES[path];
+  const deepLink = matchDeepLink(path);
 
   // Standalone full-screen pages (no marketing header/footer/loader)
   if (path === '/soon') {
@@ -121,6 +160,20 @@ export default function App() {
         style={{ fontFamily: "'Inter', sans-serif" }}
       >
         <ComingSoon />
+      </div>
+    );
+  }
+
+  // Deep-link landing pages (/r/*, /n/*, /open, /get) — rendered
+  // without Loader/Header/Footer so users tapping a share link see
+  // content instantly.
+  if (deepLink) {
+    return (
+      <div
+        className="relative min-h-[100dvh] [overflow-x:clip]"
+        style={{ fontFamily: "'Inter', sans-serif" }}
+      >
+        {deepLink}
       </div>
     );
   }
