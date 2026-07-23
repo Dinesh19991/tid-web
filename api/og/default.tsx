@@ -1,63 +1,83 @@
 // Dynamic Open Graph image generator for tid share links.
 //
-// Runs on Vercel's Edge runtime and renders a 1200×630 branded card in the
-// tid card-blur aesthetic: deep indigo base + two blue orbs + tid wordmark.
+// Runs on Vercel's experimental-edge runtime and renders a 1200×630
+// branded card matching the tid card-blur aesthetic: deep indigo base +
+// two blue orbs + tid wordmark, with a per-type layout on top.
 //
 // Query params (all optional):
-//   type    — one of "room" | "note" | "invite" | "template" | "default"
-//   title   — the resource's public title (falls back to a sensible default)
-//   sub     — one-line subtitle beneath the title
+//   type      — "room" | "invite" | "note" | "template" | "default"
+//   title     — resource name (falls back to a sensible default)
+//   sub       — one-line subtitle beneath the title
+//   by        — inviter or note author ("Shared by …", "Invited by …")
+//   members   — integer member count (rooms/invites) — rendered as chip
+//   snippet   — short body preview (notes only)
+//   private   — "1" to render a private-note lock state
 //
 // Called by:
 //   - middleware.ts, which injects the URL into <meta property="og:image">
-//   - Any share page that wants a per-resource preview
+//     and forwards through any query params the share URL carried
 //
-// Cache: Vercel edge caches the response for the given URL, so repeated
-// crawls (Facebook, WhatsApp, Slack, Twitter, LinkedIn, Discord…) don't
-// re-render.
+// Cache: Vercel edge caches by full URL — every distinct combination
+// of params gets its own cached image.
 
 import { ImageResponse } from '@vercel/og';
 
-// Runs on Vercel's `experimental-edge` runtime — the traditional
-// @vercel/og runtime that bundles Noto Sans by default (no font-loading
-// boilerplate) and is treated as a distinct bundle from the Edge
-// Middleware at project root.
 export const config = { runtime: 'experimental-edge' };
 
-type LinkType = 'room' | 'note' | 'invite' | 'template' | 'default';
+type LinkType = 'room' | 'invite' | 'note' | 'template' | 'default';
 
 const EYEBROWS: Record<LinkType, string> = {
   room: 'Shared room',
-  note: 'Shared note',
   invite: "You're invited",
+  note: 'Shared note',
   template: 'Template',
   default: 'tid',
 };
 
 const DEFAULT_TITLES: Record<LinkType, string> = {
   room: 'Open this room on tid',
-  note: 'Open this note on tid',
   invite: 'Join a room on tid',
+  note: 'Open this note on tid',
   template: 'Get this template on tid',
   default: 'Notes that think with you',
 };
 
 const DEFAULT_SUBS: Record<LinkType, string> = {
   room: 'A shared workspace on tid — the AI notebook.',
+  invite: "You've been invited to a shared workspace on tid.",
   note: 'A shared note on tid — the AI notebook.',
-  invite: 'Tap to accept the invite and join the room.',
   template: 'Add this template to your tid notebook.',
-  default: 'The AI notebook that turns voice, text, and photos into clean, findable notes.',
+  default:
+    'The AI notebook that turns voice, text, and photos into clean, findable notes.',
 };
 
-export default function handler(req: Request): Response {
-  const { searchParams } = new URL(req.url);
-  const rawType = (searchParams.get('type') || 'default') as LinkType;
-  const type: LinkType = rawType in EYEBROWS ? rawType : 'default';
+const PRIVATE_TITLE = 'This note is private';
+const PRIVATE_SUB = 'Sign in to tid on the app to view it.';
 
-  const title = truncate(searchParams.get('title') || DEFAULT_TITLES[type], 90);
-  const sub = truncate(searchParams.get('sub') || DEFAULT_SUBS[type], 180);
+export default function handler(req: Request): Response {
+  const url = new URL(req.url);
+  const p = url.searchParams;
+
+  const rawType = (p.get('type') || 'default') as LinkType;
+  const type: LinkType = rawType in EYEBROWS ? rawType : 'default';
+  const isPrivate = type === 'note' && p.get('private') === '1';
+
   const eyebrow = EYEBROWS[type];
+  const title = isPrivate
+    ? PRIVATE_TITLE
+    : truncate(p.get('title') || DEFAULT_TITLES[type], 90);
+  const sub = isPrivate
+    ? PRIVATE_SUB
+    : truncate(p.get('sub') || buildSubFromParams(type, p) || DEFAULT_SUBS[type], 200);
+
+  const members = parseIntSafe(p.get('members'));
+  const by = truncate((p.get('by') || '').trim(), 60);
+  const snippet = truncate((p.get('snippet') || '').trim(), 180);
+
+  const showMemberChip =
+    (type === 'room' || type === 'invite') && members !== null && members > 0;
+  const showByChip = !isPrivate && by.length > 0;
+  const showSnippetBlock = type === 'note' && !isPrivate && snippet.length > 0;
 
   return new ImageResponse(
     (
@@ -76,7 +96,7 @@ export default function handler(req: Request): Response {
           fontFamily: 'Inter, system-ui, sans-serif',
         }}
       >
-        {/* Top-right vibrant blue orb */}
+        {/* Blue orbs — same recipe as the site's .card-blur */}
         <div
           style={{
             display: 'flex',
@@ -90,7 +110,6 @@ export default function handler(req: Request): Response {
               'radial-gradient(circle, rgba(110,135,240,0.55), rgba(110,135,240,0) 70%)',
           }}
         />
-        {/* Top-left softer indigo orb */}
         <div
           style={{
             display: 'flex',
@@ -104,7 +123,6 @@ export default function handler(req: Request): Response {
               'radial-gradient(circle, rgba(80,105,215,0.45), rgba(80,105,215,0) 70%)',
           }}
         />
-        {/* Bottom accent orb — for depth */}
         <div
           style={{
             display: 'flex',
@@ -119,34 +137,64 @@ export default function handler(req: Request): Response {
           }}
         />
 
-        {/* Top row: eyebrow tag */}
-        <div style={{ display: 'flex', position: 'relative' }}>
+        {/* Top: eyebrow + optional private lock icon */}
+        <div
+          style={{
+            display: 'flex',
+            position: 'relative',
+            alignItems: 'center',
+            gap: '14px',
+          }}
+        >
           <div
             style={{
               display: 'flex',
               padding: '10px 22px',
               borderRadius: '9999px',
-              background: 'rgba(157,184,245,0.14)',
-              border: '1px solid rgba(157,184,245,0.35)',
+              background: isPrivate
+                ? 'rgba(255,255,255,0.05)'
+                : 'rgba(157,184,245,0.14)',
+              border: isPrivate
+                ? '1px solid rgba(255,255,255,0.14)'
+                : '1px solid rgba(157,184,245,0.35)',
               fontSize: 20,
               letterSpacing: '0.32em',
               textTransform: 'uppercase',
-              color: '#bdd1f7',
+              color: isPrivate ? 'rgba(255,255,255,0.55)' : '#bdd1f7',
               fontWeight: 600,
             }}
           >
             {eyebrow}
           </div>
+
+          {isPrivate ? (
+            <div
+              style={{
+                display: 'flex',
+                width: '46px',
+                height: '46px',
+                borderRadius: '9999px',
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.14)',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 22,
+                color: 'rgba(255,255,255,0.7)',
+              }}
+            >
+              🔒
+            </div>
+          ) : null}
         </div>
 
-        {/* Middle: title + subtitle */}
+        {/* Middle: title + subtitle + optional meta chips + optional snippet */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '24px',
+            gap: '20px',
             position: 'relative',
-            maxWidth: '900px',
+            maxWidth: '960px',
           }}
         >
           <div
@@ -161,21 +209,67 @@ export default function handler(req: Request): Response {
           >
             {title}
           </div>
-          <div
-            style={{
-              display: 'flex',
-              fontSize: 26,
-              lineHeight: 1.4,
-              color: 'rgba(255,255,255,0.62)',
-              fontWeight: 400,
-              maxWidth: '820px',
-            }}
-          >
-            {sub}
-          </div>
+
+          {/* Meta chips row (member count, "by X") */}
+          {(showMemberChip || showByChip) && !showSnippetBlock ? (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                marginTop: '4px',
+              }}
+            >
+              {showMemberChip ? (
+                <Chip>
+                  {members} {members === 1 ? 'member' : 'members'}
+                </Chip>
+              ) : null}
+              {showByChip ? (
+                <Chip>
+                  {type === 'invite' ? 'Invited by' : 'Shared by'} {by}
+                </Chip>
+              ) : null}
+            </div>
+          ) : null}
+
+          {/* Note snippet, framed like a note card */}
+          {showSnippetBlock ? (
+            <div
+              style={{
+                display: 'flex',
+                padding: '22px 26px',
+                borderRadius: '18px',
+                border: '1px solid rgba(255,255,255,0.09)',
+                background: 'rgba(255,255,255,0.03)',
+                fontSize: 24,
+                lineHeight: 1.4,
+                color: 'rgba(255,255,255,0.75)',
+                maxWidth: '900px',
+              }}
+            >
+              {snippet}
+            </div>
+          ) : null}
+
+          {/* Fallback subtitle when we have no chips / snippet */}
+          {!showMemberChip && !showByChip && !showSnippetBlock ? (
+            <div
+              style={{
+                display: 'flex',
+                fontSize: 26,
+                lineHeight: 1.4,
+                color: 'rgba(255,255,255,0.62)',
+                fontWeight: 400,
+                maxWidth: '820px',
+              }}
+            >
+              {sub}
+            </div>
+          ) : null}
         </div>
 
-        {/* Bottom row: tid wordmark + url */}
+        {/* Bottom: tid wordmark + url */}
         <div
           style={{
             display: 'flex',
@@ -184,22 +278,14 @@ export default function handler(req: Request): Response {
             position: 'relative',
           }}
         >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '14px',
-            }}
-          >
-            {/* Blue chip mark */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <div
               style={{
                 display: 'flex',
                 width: '52px',
                 height: '52px',
                 borderRadius: '14px',
-                background:
-                  'linear-gradient(155deg,#1a2150,#0c1230)',
+                background: 'linear-gradient(155deg,#1a2150,#0c1230)',
                 border: '1px solid rgba(255,255,255,0.14)',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -240,8 +326,6 @@ export default function handler(req: Request): Response {
     {
       width: 1200,
       height: 630,
-      // Cache-Control set on the outer Response — 5 min at edge, 1 day in
-      // downstream CDNs; a share never re-generates unless the URL changes.
       headers: {
         'cache-control':
           'public, max-age=300, s-maxage=86400, stale-while-revalidate=604800',
@@ -250,7 +334,50 @@ export default function handler(req: Request): Response {
   );
 }
 
+/** Small pill used for member count / "shared by X" beneath the title. */
+function Chip({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        padding: '8px 16px',
+        borderRadius: '9999px',
+        border: '1px solid rgba(255,255,255,0.12)',
+        background: 'rgba(255,255,255,0.05)',
+        fontSize: 22,
+        color: 'rgba(255,255,255,0.78)',
+        fontWeight: 500,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/** Build a fallback subtitle from the shape of the metadata we got. */
+function buildSubFromParams(
+  type: LinkType,
+  p: URLSearchParams,
+): string | null {
+  const by = (p.get('by') || '').trim();
+  const members = parseIntSafe(p.get('members'));
+  const parts: string[] = [];
+  if (members !== null && members > 0) {
+    parts.push(`${members} ${members === 1 ? 'member' : 'members'}`);
+  }
+  if (by) {
+    parts.push(`${type === 'invite' ? 'invited by' : 'shared by'} ${by}`);
+  }
+  return parts.length ? parts.join(' · ') : null;
+}
+
 function truncate(s: string, max: number): string {
   if (s.length <= max) return s;
   return s.slice(0, max - 1).trimEnd() + '…';
+}
+
+function parseIntSafe(s: string | null): number | null {
+  if (!s) return null;
+  const n = parseInt(s, 10);
+  return Number.isFinite(n) && n >= 0 ? n : null;
 }

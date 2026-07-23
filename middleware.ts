@@ -62,49 +62,116 @@ type Meta = {
   ogImage: string; // absolute URL
 };
 
+/** Params that the tid_app (or any share flow) can encode into share URLs
+ * to unlock richer OG previews. Forwarded verbatim to /api/og/default. */
+const FORWARDED_PARAMS = ['name', 'members', 'by', 'snippet', 'private'];
+
+/** Build the OG image URL for a given link type, carrying forward any of
+ * the share URL's own query params that the OG generator understands. */
+function ogUrl(
+  origin: string,
+  type: string,
+  incomingParams: URLSearchParams,
+): string {
+  const params = new URLSearchParams();
+  params.set('type', type);
+
+  // If the share URL carried a `name`, use it as the title. Same for
+  // sub-line and other props — this is what makes previews rich per
+  // resource without any backend fetches.
+  const name = incomingParams.get('name');
+  if (name) params.set('title', name);
+
+  for (const key of FORWARDED_PARAMS) {
+    if (key === 'name') continue; // already mapped above
+    const v = incomingParams.get(key);
+    if (v) params.set(key, v);
+  }
+
+  return `${origin}/api/og/default?${params.toString()}`;
+}
+
+/** Description tailored to what we know about the link. */
+function describeInvite(p: URLSearchParams): string {
+  const name = p.get('name');
+  const by = p.get('by');
+  const parts: string[] = [];
+  if (by) parts.push(`${by} invited you`);
+  else parts.push("You've been invited");
+  parts.push(name ? `to join ${name} on tid.` : 'to a shared room on tid.');
+  return parts.join(' ');
+}
+
+function describeRoom(p: URLSearchParams): string {
+  const name = p.get('name');
+  const members = p.get('members');
+  if (name && members) return `${name} · ${members} members on tid.`;
+  if (name) return `${name} — a shared room on tid.`;
+  return 'A shared room on tid — the AI notebook that thinks with you.';
+}
+
+function describeNote(p: URLSearchParams): string {
+  if (p.get('private') === '1') {
+    return 'This note is private on tid. Sign in to view it.';
+  }
+  const name = p.get('name');
+  const by = p.get('by');
+  if (name && by) return `${name} — shared by ${by} on tid.`;
+  if (name) return `${name} — a note on tid.`;
+  return 'A shared note on tid — the AI notebook that jots, organizes, and finds every thought for you.';
+}
+
 function buildMetaFor(url: URL): Meta {
-  const { pathname, origin } = url;
+  const { pathname, origin, searchParams } = url;
 
   // /r/{roomId}/join → invite
   if (/^\/r\/[^/]+\/join\/?$/.test(pathname)) {
+    const name = searchParams.get('name');
     return {
-      title: "You're invited to a room on tid",
-      description:
-        "You've been invited to join a shared room on tid. Tap to accept and open the app.",
+      title: name
+        ? `You're invited to ${name} on tid`
+        : "You're invited to a room on tid",
+      description: describeInvite(searchParams),
       ogType: 'website',
-      ogImage: `${origin}/api/og/default?type=invite`,
+      ogImage: ogUrl(origin, 'invite', searchParams),
     };
   }
 
   // /r/{roomId}/n/{msgId} or /r/{roomId} → room
   if (pathname.startsWith('/r/')) {
+    const name = searchParams.get('name');
     return {
-      title: 'A shared room on tid',
-      description:
-        'Open this shared room on tid — the AI notebook that thinks with you.',
+      title: name ? `${name} · shared on tid` : 'A shared room on tid',
+      description: describeRoom(searchParams),
       ogType: 'website',
-      ogImage: `${origin}/api/og/default?type=room`,
+      ogImage: ogUrl(origin, 'room', searchParams),
     };
   }
 
   // /n/{noteId} → note
   if (pathname.startsWith('/n/')) {
+    const name = searchParams.get('name');
+    const isPrivate = searchParams.get('private') === '1';
     return {
-      title: 'A shared note on tid',
-      description:
-        'Open this note on tid — the AI notebook that jots, organizes, and finds every thought for you.',
+      title: isPrivate
+        ? 'A private note on tid'
+        : name
+          ? `${name} · shared on tid`
+          : 'A shared note on tid',
+      description: describeNote(searchParams),
       ogType: 'article',
-      ogImage: `${origin}/api/og/default?type=note`,
+      ogImage: ogUrl(origin, 'note', searchParams),
     };
   }
 
   // /t/{templateId} → template
   if (pathname.startsWith('/t/')) {
+    const name = searchParams.get('name');
     return {
-      title: 'A shared template on tid',
+      title: name ? `${name} · template on tid` : 'A shared template on tid',
       description: 'Add this template to your tid notebook.',
       ogType: 'website',
-      ogImage: `${origin}/api/og/default?type=template`,
+      ogImage: ogUrl(origin, 'template', searchParams),
     };
   }
 
