@@ -18,12 +18,11 @@
 
 import { ImageResponse } from '@vercel/og';
 
-// Runs on Vercel's Node runtime, not Edge. Reason: `middleware.ts` at the
-// project root is an Edge Middleware bundle, and Vercel refuses to
-// co-bundle @vercel/og into it (satori's WASM isn't allowed in the
-// stricter middleware sandbox). Keeping this on Node keeps the two
-// bundles independent and lets @vercel/og work here.
-export const config = { runtime: 'nodejs' };
+// Runs on Vercel's `experimental-edge` runtime — the traditional
+// @vercel/og runtime that bundles Noto Sans by default (no font-loading
+// boilerplate) and is treated as a distinct bundle from the Edge
+// Middleware at project root.
+export const config = { runtime: 'experimental-edge' };
 
 type LinkType = 'room' | 'note' | 'invite' | 'template' | 'default';
 
