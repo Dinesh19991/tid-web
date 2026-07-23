@@ -23,7 +23,7 @@ import { ImageResponse } from '@vercel/og';
 // co-bundle @vercel/og into it (satori's WASM isn't allowed in the
 // stricter middleware sandbox). Keeping this on Node keeps the two
 // bundles independent and lets @vercel/og work here.
-export const config = { runtime: 'nodejs20.x' };
+export const config = { runtime: 'nodejs' };
 
 type LinkType = 'room' | 'note' | 'invite' | 'template' | 'default';
 
