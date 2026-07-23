@@ -18,7 +18,12 @@
 
 import { ImageResponse } from '@vercel/og';
 
-export const config = { runtime: 'edge' };
+// Runs on Vercel's Node runtime, not Edge. Reason: `middleware.ts` at the
+// project root is an Edge Middleware bundle, and Vercel refuses to
+// co-bundle @vercel/og into it (satori's WASM isn't allowed in the
+// stricter middleware sandbox). Keeping this on Node keeps the two
+// bundles independent and lets @vercel/og work here.
+export const config = { runtime: 'nodejs20.x' };
 
 type LinkType = 'room' | 'note' | 'invite' | 'template' | 'default';
 
