@@ -23,8 +23,7 @@ function Dash() {
 
 type Tier = {
   name: 'Free' | 'Pro' | 'Max';
-  monthly: number;
-  yearly: number;
+  price: number;
   blurb: string;
   features: string[];
   cta: string;
@@ -34,8 +33,7 @@ type Tier = {
 const TIERS: Tier[] = [
   {
     name: 'Free',
-    monthly: 0,
-    yearly: 0,
+    price: 0,
     blurb: 'Try the magic — capture notes by voice or text.',
     features: [
       '50 notes',
@@ -50,8 +48,7 @@ const TIERS: Tier[] = [
   },
   {
     name: 'Pro',
-    monthly: 12,
-    yearly: 9,
+    price: 12,
     blurb: 'For people who take notes all day, every day.',
     features: [
       'Unlimited notes',
@@ -68,8 +65,7 @@ const TIERS: Tier[] = [
   },
   {
     name: 'Max',
-    monthly: 24,
-    yearly: 18,
+    price: 24,
     blurb: 'For power note-takers and growing teams.',
     features: [
       'Everything in Pro',
@@ -222,7 +218,6 @@ function MatrixCell({ value }: { value: Cell }) {
 
 export default function Pricing() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly');
   const [showCompare, setShowCompare] = useState(false);
   const [openFaq, setOpenFaq] = useState<number>(0);
 
@@ -245,8 +240,6 @@ export default function Pricing() {
     return () => ctx.revert();
   }, []);
 
-  const proSavings = Math.round((1 - TIERS[1].yearly / TIERS[1].monthly) * 100);
-
   return (
     <section
       id="pricing"
@@ -254,67 +247,37 @@ export default function Pricing() {
       className="relative bg-[#0a0a0d] py-24 md:py-32 px-6 sm:px-8 lg:px-12 border-t border-white/[0.06]"
     >
       <div className="relative max-w-6xl mx-auto">
-        {/* heading + billing toggle */}
-        <div className="price-head mb-14 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
-          <div className="max-w-xl">
-            <span className="text-[10.5px] tracking-[0.32em] uppercase text-[#9db8f5]/80 font-medium">
-              Pricing
-            </span>
-            <h2
-              className="mt-3"
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 300,
-                fontSize: 'clamp(28px, 3.8vw, 46px)',
-                lineHeight: 1.08,
-                letterSpacing: '-0.025em',
-                margin: 0,
-              }}
-            >
-              Start free.
-              <br />
-              Upgrade when it clicks.
-            </h2>
-            <p className="mt-5 text-white/55 text-[14px] leading-relaxed max-w-md">
-              One quiet plan per type of thinker. Caps are written here, not
-              hidden in fine print — so you always know what you&apos;re paying
-              for.
-            </p>
-          </div>
-
-          <div
-            role="tablist"
-            aria-label="Billing period"
-            className="inline-flex items-center self-start md:self-end rounded-full border border-white/[0.08] bg-white/[0.03] p-1"
+        {/* heading */}
+        <div className="price-head mb-14 max-w-xl">
+          <span className="text-[10.5px] tracking-[0.32em] uppercase text-[#9db8f5]/80 font-medium">
+            Pricing
+          </span>
+          <h2
+            className="mt-3"
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 300,
+              fontSize: 'clamp(28px, 3.8vw, 46px)',
+              lineHeight: 1.08,
+              letterSpacing: '-0.025em',
+              margin: 0,
+            }}
           >
-            {(['monthly', 'yearly'] as const).map((p) => (
-              <button
-                key={p}
-                role="tab"
-                aria-selected={billing === p}
-                onClick={() => setBilling(p)}
-                className={`rounded-full px-4 py-1.5 text-[12.5px] font-medium tracking-tight transition-colors ${
-                  billing === p
-                    ? 'bg-white text-[#0a0a0d]'
-                    : 'text-white/55 hover:text-white/80'
-                }`}
-              >
-                {p === 'monthly' ? 'Monthly' : `Yearly · save ${proSavings}%`}
-              </button>
-            ))}
-          </div>
+            Start free.
+            <br />
+            Upgrade when it clicks.
+          </h2>
+          <p className="mt-5 text-white/55 text-[14px] leading-relaxed max-w-md">
+            One quiet plan per type of thinker. Caps are written here, not
+            hidden in fine print — so you always know what you&apos;re paying
+            for.
+          </p>
         </div>
 
         {/* tier grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
           {TIERS.map((tier) => {
-            const price = billing === 'monthly' ? tier.monthly : tier.yearly;
-            const cadence =
-              tier.monthly === 0
-                ? 'forever'
-                : billing === 'monthly'
-                ? 'per month'
-                : 'per month, billed yearly';
+            const cadence = tier.price === 0 ? 'forever' : 'per month';
 
             return (
               <div
@@ -353,7 +316,7 @@ export default function Pricing() {
                       lineHeight: 1,
                     }}
                   >
-                    ${price}
+                    ${tier.price}
                   </span>
                   <span className="text-white/40 text-[12.5px]">
                     {cadence}
