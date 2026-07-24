@@ -22,7 +22,7 @@ function Dash() {
 }
 
 type Tier = {
-  name: 'Free' | 'Pro' | 'Max';
+  name: 'Basic' | 'Pro' | 'Max';
   price: number;
   blurb: string;
   features: string[];
@@ -32,7 +32,7 @@ type Tier = {
 
 const TIERS: Tier[] = [
   {
-    name: 'Free',
+    name: 'Basic',
     price: 0,
     blurb: 'Try the magic — capture notes by voice or text.',
     features: [
@@ -48,7 +48,7 @@ const TIERS: Tier[] = [
   },
   {
     name: 'Pro',
-    price: 12,
+    price: 9,
     blurb: 'For people who take notes all day, every day.',
     features: [
       'Unlimited notes',
@@ -65,7 +65,7 @@ const TIERS: Tier[] = [
   },
   {
     name: 'Max',
-    price: 24,
+    price: 18,
     blurb: 'For power note-takers and growing teams.',
     features: [
       'Everything in Pro',
@@ -187,7 +187,7 @@ const FAQ_QA = [
   },
   {
     q: 'Can I cancel anytime?',
-    a: 'Yes. Cancel from the app in two taps. Pro and Max keep working through the end of your billing cycle, then drop to Free. Your notes are always yours.',
+    a: 'Yes. Cancel from the app in two taps. Pro and Max keep working through the end of your billing cycle, then drop to Basic. Your notes are always yours.',
   },
   {
     q: 'Do team members on Pro need their own subscription?',
@@ -195,11 +195,11 @@ const FAQ_QA = [
   },
   {
     q: 'What happens if I hit a monthly limit?',
-    a: 'You\'ll see a clear notice in the app. Voice and PDF caps reset on the 1st of each month. The Mr. Tid daily cap on Free resets at midnight in your timezone.',
+    a: 'You\'ll see a clear notice in the app. Voice and PDF caps reset on the 1st of each month. The Mr. Tid daily cap on Basic resets at midnight in your timezone.',
   },
   {
     q: 'Is there a free trial for Pro?',
-    a: 'Yes — 7 days, no card required at signup. You\'ll get a reminder before it ends, and you\'ll drop to Free if you don\'t upgrade.',
+    a: 'Yes — 7 days, no card required at signup. You\'ll get a reminder before it ends, and you\'ll drop to Basic if you don\'t upgrade.',
   },
 ];
 
@@ -416,7 +416,7 @@ export default function Pricing() {
                     <div className="px-5 py-3.5 text-[11px] tracking-[0.16em] uppercase text-white/40 font-medium">
                       Feature
                     </div>
-                    {(['Free', 'Pro', 'Max'] as const).map((n, i) => (
+                    {(['Basic', 'Pro', 'Max'] as const).map((n, i) => (
                       <div
                         key={n}
                         className={`px-3 py-3.5 text-center text-[13px] font-medium ${
