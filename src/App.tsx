@@ -22,6 +22,7 @@ import RoomLanding from './components/link/RoomLanding';
 import RoomInviteLanding from './components/link/RoomInviteLanding';
 import NoteLanding from './components/link/NoteLanding';
 import OpenAppLanding from './components/link/OpenAppLanding';
+import ReferralLanding from './components/link/ReferralLanding';
 
 function Home() {
   return (
@@ -82,8 +83,14 @@ function matchDeepLink(pathname: string): ReactNode | null {
   const noteMatch = pathname.match(/^\/n\/([^/]+)\/?$/);
   if (noteMatch) return <NoteLanding noteId={noteMatch[1]} />;
 
-  // /open, /get → universal opener
-  if (pathname === '/open' || pathname === '/get') return <OpenAppLanding />;
+  // /get?ref={referrerUid} → personalised referral landing
+  // /get with no ref (or /open) → the plain universal opener
+  if (pathname === '/get') {
+    const ref = (new URLSearchParams(window.location.search).get('ref') ?? '').trim();
+    if (ref) return <ReferralLanding ref={ref} />;
+    return <OpenAppLanding />;
+  }
+  if (pathname === '/open') return <OpenAppLanding />;
 
   return null;
 }
