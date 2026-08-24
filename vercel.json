@@ -18,10 +18,6 @@
   "cleanUrls": false,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/r/:path*", "destination": "/index.html" },
-    { "source": "/n/:path*", "destination": "/index.html" },
-    { "source": "/t/:path*", "destination": "/index.html" },
-    { "source": "/open", "destination": "/index.html" },
-    { "source": "/get", "destination": "/index.html" }
+    { "source": "/((?!api/|.*\\.).*)", "destination": "/index.html" }
   ]
 }
