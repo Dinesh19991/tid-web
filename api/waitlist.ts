@@ -42,7 +42,6 @@ export default async function handler(req: any, res: any) {
 
   // 1) Send the confirmation email (primary path).
   let sent = false;
-  let debug: Record<string, unknown> | undefined;
   try {
     const html = await (await fetch(`${TEMPLATE_URL}?v=${Date.now()}`)).text();
     const r = await fetch('https://api.resend.com/emails', {
@@ -56,21 +55,9 @@ export default async function handler(req: any, res: any) {
       }),
     });
     sent = r.ok;
-    if (!r.ok) {
-      const errBody = await r.text();
-      console.error('[waitlist] resend error', r.status, errBody);
-      // TEMP DIAGNOSTIC — reveals the Resend error + key shape (not the key).
-      debug = {
-        resendStatus: r.status,
-        resendBody: errBody,
-        keyPrefix: apiKey.slice(0, 3),
-        keyLen: apiKey.length,
-        keyTrimmedLen: apiKey.trim().length,
-      };
-    }
+    if (!r.ok) console.error('[waitlist] resend error', r.status, await r.text());
   } catch (err) {
     console.error('[waitlist] resend threw', err);
-    debug = { threw: String(err) };
   }
 
   // 2) Record the signup (best-effort; only if Firestore is configured).
@@ -78,7 +65,7 @@ export default async function handler(req: any, res: any) {
     console.error('[waitlist] firestore log failed', e),
   );
 
-  return res.status(sent ? 200 : 502).json({ ok: sent, debug });
+  return res.status(sent ? 200 : 502).json({ ok: sent });
 }
 
 async function logSignup(data: Record<string, unknown>): Promise<void> {
